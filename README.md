@@ -121,7 +121,7 @@ python scripts/18_power_analysis.py
 
 ### Pre-trained Models
 
-Model weights are available on HuggingFace (link TBD) or can be reproduced from scratch using the scripts above.
+Model weights are available on [HuggingFace](https://huggingface.co/JesseWeigel/ligo-glitch-vit-cnn) or can be reproduced from scratch using the scripts above.
 
 ## Dataset
 
