@@ -1,0 +1,514 @@
+{
+  "paper_title": "When do Vision Transformers help? Class-dependent architecture preferences for gravitational-wave glitch classification",
+  "date": "2026-03-18",
+  "contact": "jesse.dawson@example.com",
+  "environment": {
+    "python_version": "3.12.3",
+    "package_manager": "pip",
+    "virtual_environment": ".venv",
+    "required_packages": [
+      {"package": "torch", "version": "2.10.0+cu128", "purpose": "Deep learning framework"},
+      {"package": "torchvision", "version": "0.21.0+cu128", "purpose": "Vision model utilities"},
+      {"package": "timm", "version": "1.0.25", "purpose": "Pretrained ViT and ResNet models"},
+      {"package": "numpy", "version": "2.4.3", "purpose": "Array operations"},
+      {"package": "pandas", "version": "3.0.1", "purpose": "Data manipulation"},
+      {"package": "scikit-learn", "version": "1.8.0", "purpose": "Metrics and evaluation"},
+      {"package": "matplotlib", "version": "3.10.8", "purpose": "Figure generation"},
+      {"package": "scipy", "version": "1.17.1", "purpose": "Statistical tests"},
+      {"package": "Pillow", "version": "12.1.1", "purpose": "Image loading"},
+      {"package": "gwpy", "version": "3.0.0", "purpose": "Gravitational wave data utilities"},
+      {"package": "gwosc", "version": "0.7.0", "purpose": "GWOSC data access"},
+      {"package": "tqdm", "version": "4.66.0", "purpose": "Progress bars"}
+    ],
+    "lock_file": "requirements.txt",
+    "system_requirements": {
+      "operating_systems": ["Ubuntu 22.04+", "WSL2"],
+      "architectures": ["x86_64"],
+      "compiler": "gcc",
+      "gpu": "NVIDIA GPU with CUDA 12.8 (RTX 5090 used; any CUDA 12.x GPU should work)"
+    }
+  },
+  "input_data": [
+    {
+      "name": "gravity-spy-o3",
+      "source": "Zenodo (Gravity Spy Collaboration)",
+      "version_or_date": "record 5649212",
+      "download_url": "https://zenodo.org/record/5649212",
+      "checksum_sha256": "9d991b801271bd549543c7a7d8fa90fa1fe55b7d9928dc8f6e8fe151c6f52f3e",
+      "license": "CC-BY-4.0",
+      "transformations": "ml_confidence > 0.9 filter, NOTA class excluded, resize to 224x224 if needed"
+    },
+    {
+      "name": "gravity-spy-o4a",
+      "source": "Gravity Spy API / Zooniverse",
+      "version_or_date": "2026-03",
+      "download_url": "see scripts/14*.py",
+      "checksum_sha256": "d49ee55973c8fc8f4951a3d1c2ac5f3be4b7c1f9101546208cc67fe8de1097b4",
+      "license": "CC-BY-4.0",
+      "transformations": "Same 23-class taxonomy as O3, ml_confidence > 0.9"
+    }
+  ],
+  "generated_data": [
+    {
+      "name": "cnn-metrics",
+      "script": "scripts/10_evaluate_cnn_baseline.py",
+      "parameters": {},
+      "size": "~500 KB",
+      "checksum_sha256": "4d2bf98871887df2743883fb3157cb4e698c3f5b71ca3080f32a1f5616d3acad"
+    },
+    {
+      "name": "vit-metrics-and-comparison",
+      "script": "scripts/12_evaluate_vit.py + scripts/13_comparison_deliverables.py",
+      "parameters": {},
+      "size": "~2 MB",
+      "checksum_sha256": "f0b706119f1b67391a99e5cb2496a4cb6c714011dd9a09025948bea43a4eeb38"
+    },
+    {
+      "name": "o4-evaluation",
+      "script": "scripts/15_evaluate_o4.py",
+      "parameters": {},
+      "size": "~1 MB",
+      "checksum_sha256": "9f7b1878edcb007317e2bbb59fc7f9153edfd678a593f31d2bc84b0985e019d3"
+    },
+    {
+      "name": "cw-veto-analysis",
+      "script": "scripts/16_cw_veto_analysis.py",
+      "parameters": {},
+      "size": "~200 KB",
+      "checksum_sha256": "653a6a9460da113de48a45e31848c3f5d005fe1e753c327fdaf552418861709b"
+    },
+    {
+      "name": "random-split-ablation",
+      "script": "scripts/17_random_split_ablation.py",
+      "parameters": {},
+      "size": "~100 KB",
+      "checksum_sha256": "8cbc5266e5e7d404d1bf9edd384d7f19e3b1627886c1d2dabe29baf43e1a3aac"
+    },
+    {
+      "name": "power-analysis",
+      "script": "scripts/18_power_analysis.py",
+      "parameters": {"n_iterations": "10000"},
+      "size": "~50 KB",
+      "checksum_sha256": "6cd41aaa18a261cf99c05c906fc101a7752823a7efe3bd19e549fe2052467140"
+    },
+    {
+      "name": "paper-numbers",
+      "script": "paper/scripts/extract_numbers.py",
+      "parameters": {},
+      "size": "~15 KB",
+      "checksum_sha256": "347ed3edb07ece9598f6e987684a78b0d8b06afa4731f59fc2f33b7cffd04c41"
+    }
+  ],
+  "external_dependencies": [
+    {
+      "resource": "Gravity Spy O3 labeled glitch catalog",
+      "access_method": "Zenodo download (record 5649212)",
+      "restrictions": "open"
+    },
+    {
+      "resource": "Gravity Spy O4a glitch images",
+      "access_method": "Gravity Spy API / Zooniverse (scripts/14*.py)",
+      "restrictions": "open"
+    },
+    {
+      "resource": "ImageNet-21k pretrained weights (ViT-B/16 AugReg, ResNet-50v2 BiT)",
+      "access_method": "timm library auto-download",
+      "restrictions": "open"
+    }
+  ],
+  "execution_steps": [
+    {
+      "name": "download-o3-metadata",
+      "command": ".venv/bin/python scripts/01_download_metadata.py",
+      "outputs": ["data/metadata/"],
+      "stochastic": false,
+      "expected_wall_time": "5 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "parse-metadata",
+      "command": ".venv/bin/python scripts/02_parse_metadata.py",
+      "outputs": ["data/parsed/"],
+      "stochastic": false,
+      "expected_wall_time": "2 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "download-spectrograms",
+      "command": ".venv/bin/python scripts/03_download_spectrograms.py",
+      "outputs": ["data/spectrograms/"],
+      "stochastic": false,
+      "expected_wall_time": "60-120 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "temporal-split",
+      "command": ".venv/bin/python scripts/06_temporal_split.py",
+      "outputs": ["data/splits/"],
+      "stochastic": false,
+      "expected_wall_time": "5 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "train-cnn",
+      "command": ".venv/bin/python scripts/09_train_cnn_baseline.py",
+      "outputs": ["models/cnn/", "results/02-cnn-baseline/training_log.json"],
+      "stochastic": true,
+      "expected_wall_time": "30-60 min",
+      "parallel_group": "training"
+    },
+    {
+      "name": "evaluate-cnn",
+      "command": ".venv/bin/python scripts/10_evaluate_cnn_baseline.py",
+      "outputs": ["results/02-cnn-baseline/"],
+      "stochastic": false,
+      "expected_wall_time": "10 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "train-vit",
+      "command": ".venv/bin/python scripts/11_train_vit.py",
+      "outputs": ["models/vit/", "results/03-vit-rare-class/training_log.json"],
+      "stochastic": true,
+      "expected_wall_time": "45-90 min",
+      "parallel_group": "training"
+    },
+    {
+      "name": "evaluate-vit",
+      "command": ".venv/bin/python scripts/12_evaluate_vit.py",
+      "outputs": ["results/03-vit-rare-class/"],
+      "stochastic": false,
+      "expected_wall_time": "10 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "comparison-deliverables",
+      "command": ".venv/bin/python scripts/13_comparison_deliverables.py",
+      "outputs": ["results/03-vit-rare-class/comparison_table.csv", "results/03-vit-rare-class/paired_bootstrap_results.json"],
+      "stochastic": true,
+      "expected_wall_time": "15 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "evaluate-o4",
+      "command": ".venv/bin/python scripts/15_evaluate_o4.py",
+      "outputs": ["results/04-o4-validation/"],
+      "stochastic": false,
+      "expected_wall_time": "15 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "cw-veto-analysis",
+      "command": ".venv/bin/python scripts/16_cw_veto_analysis.py",
+      "outputs": ["results/04-o4-validation/cw_veto_results.json", "results/04-o4-validation/cw_duty_cycle_comparison.csv"],
+      "stochastic": false,
+      "expected_wall_time": "10 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "threshold-test",
+      "command": ".venv/bin/python scripts/16_threshold_test.py",
+      "outputs": ["results/04-o4-validation/o4_threshold_test.json"],
+      "stochastic": false,
+      "expected_wall_time": "5 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "random-split-ablation",
+      "command": ".venv/bin/python scripts/17_random_split_ablation.py",
+      "outputs": ["results/06-computation-statistical-analysis/random_split_ablation.json"],
+      "stochastic": true,
+      "expected_wall_time": "45 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "power-analysis",
+      "command": ".venv/bin/python scripts/18_power_analysis.py",
+      "outputs": ["results/06-computation-statistical-analysis/power_analysis.json"],
+      "stochastic": true,
+      "expected_wall_time": "20 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "extract-paper-numbers",
+      "command": ".venv/bin/python paper/scripts/extract_numbers.py",
+      "outputs": ["paper/data/paper_numbers.json"],
+      "stochastic": false,
+      "expected_wall_time": "1 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "generate-figures",
+      "command": ".venv/bin/python paper/scripts/generate_figures.py",
+      "outputs": ["paper/figures/fig_per_class_f1.pdf", "paper/figures/fig_threshold_scatter.pdf", "paper/figures/fig_confusion_matrices.pdf", "paper/figures/fig_o4_degradation.pdf", "paper/figures/fig_cw_veto.pdf"],
+      "stochastic": false,
+      "expected_wall_time": "2 min",
+      "parallel_group": ""
+    },
+    {
+      "name": "generate-tables",
+      "command": ".venv/bin/python paper/tables/generate_tables.py",
+      "outputs": ["paper/tables/table_overall.tex", "paper/tables/table_perclass.tex", "paper/tables/table_cw.tex"],
+      "stochastic": false,
+      "expected_wall_time": "1 min",
+      "parallel_group": ""
+    }
+  ],
+  "expected_results": [
+    {
+      "quantity": "ViT macro-F1 (O3)",
+      "expected_value": "0.723",
+      "tolerance": "+/- 0.020",
+      "script": "scripts/12_evaluate_vit.py",
+      "figure_or_table": "Table I"
+    },
+    {
+      "quantity": "CNN macro-F1 (O3)",
+      "expected_value": "0.679",
+      "tolerance": "+/- 0.015",
+      "script": "scripts/10_evaluate_cnn_baseline.py",
+      "figure_or_table": "Table I"
+    },
+    {
+      "quantity": "Paired bootstrap p-value (overall macro-F1)",
+      "expected_value": "< 0.001",
+      "tolerance": "order of magnitude",
+      "script": "scripts/13_comparison_deliverables.py",
+      "figure_or_table": "Table I"
+    },
+    {
+      "quantity": "Random-split CNN accuracy",
+      "expected_value": "0.954",
+      "tolerance": "+/- 0.005",
+      "script": "scripts/17_random_split_ablation.py",
+      "figure_or_table": "Section 3.2"
+    },
+    {
+      "quantity": "Aggregate rare-class power",
+      "expected_value": "0.20",
+      "tolerance": "+/- 0.05",
+      "script": "scripts/18_power_analysis.py",
+      "figure_or_table": "Section 3.1"
+    }
+  ],
+  "output_files": [
+    {
+      "path": "paper/figures/fig_per_class_f1.pdf",
+      "description": "Per-class F1 comparison bar chart (Fig. 1)",
+      "approximate_size": "30 KB",
+      "checksum_sha256": "approx:d2da814fe00065a452eb11de9464e5d1e7023c3c0358815fa8f13945997c692d",
+      "approximate_checksum": true
+    },
+    {
+      "path": "paper/figures/fig_threshold_scatter.pdf",
+      "description": "Training set size vs F1 difference scatter (Fig. 2)",
+      "approximate_size": "24 KB",
+      "checksum_sha256": "approx:22d43c98a158cd73a80b6df436663ebe5b982e8aa9ac06b534fd664d8f8d0970",
+      "approximate_checksum": true
+    },
+    {
+      "path": "paper/figures/fig_confusion_matrices.pdf",
+      "description": "Side-by-side confusion matrices (Fig. 3)",
+      "approximate_size": "42 KB",
+      "checksum_sha256": "approx:957dc89d39605060efce96fb40e0e585e42a759d1722f2680a0455af78889011",
+      "approximate_checksum": true
+    },
+    {
+      "path": "paper/figures/fig_o4_degradation.pdf",
+      "description": "O4 degradation per-class bar chart (Fig. 4)",
+      "approximate_size": "26 KB",
+      "checksum_sha256": "approx:d5d1ec1d28eb7deb12b0fd113fd3570b7c0385f542c9c1f228b91b6ea65518ce",
+      "approximate_checksum": true
+    },
+    {
+      "path": "paper/figures/fig_cw_veto.pdf",
+      "description": "CW veto efficiency comparison (Fig. 5)",
+      "approximate_size": "21 KB",
+      "checksum_sha256": "approx:64ddc5b1b278e198dd3eec22887d79eb52c286398924974c96e50e38d69b70c0",
+      "approximate_checksum": true
+    }
+  ],
+  "resource_requirements": [
+    {
+      "step": "download-o3-metadata",
+      "cpu_cores": 1,
+      "memory_gb": 2.0,
+      "gpu": "",
+      "wall_time": "5 min",
+      "notes": "Network-bound"
+    },
+    {
+      "step": "parse-metadata",
+      "cpu_cores": 1,
+      "memory_gb": 2.0,
+      "gpu": "",
+      "wall_time": "2 min",
+      "notes": "Light preprocessing"
+    },
+    {
+      "step": "download-spectrograms",
+      "cpu_cores": 1,
+      "memory_gb": 4.0,
+      "gpu": "",
+      "wall_time": "60-120 min",
+      "notes": "Network-bound; depends on Zenodo/API speed"
+    },
+    {
+      "step": "temporal-split",
+      "cpu_cores": 1,
+      "memory_gb": 4.0,
+      "gpu": "",
+      "wall_time": "5 min",
+      "notes": "GPS-time-based splitting"
+    },
+    {
+      "step": "train-cnn",
+      "cpu_cores": 4,
+      "memory_gb": 16.0,
+      "gpu": "1x NVIDIA GPU (>= 8 GB VRAM)",
+      "wall_time": "30-60 min",
+      "notes": "Mixed precision (FP16); RTX 5090 used"
+    },
+    {
+      "step": "evaluate-cnn",
+      "cpu_cores": 2,
+      "memory_gb": 8.0,
+      "gpu": "1x NVIDIA GPU",
+      "wall_time": "10 min",
+      "notes": "Inference only"
+    },
+    {
+      "step": "train-vit",
+      "cpu_cores": 4,
+      "memory_gb": 16.0,
+      "gpu": "1x NVIDIA GPU (>= 8 GB VRAM)",
+      "wall_time": "45-90 min",
+      "notes": "Mixed precision (FP16); RTX 5090 used"
+    },
+    {
+      "step": "evaluate-vit",
+      "cpu_cores": 2,
+      "memory_gb": 8.0,
+      "gpu": "1x NVIDIA GPU",
+      "wall_time": "10 min",
+      "notes": "Inference only"
+    },
+    {
+      "step": "comparison-deliverables",
+      "cpu_cores": 4,
+      "memory_gb": 8.0,
+      "gpu": "",
+      "wall_time": "15 min",
+      "notes": "10,000 bootstrap resamples"
+    },
+    {
+      "step": "evaluate-o4",
+      "cpu_cores": 2,
+      "memory_gb": 8.0,
+      "gpu": "1x NVIDIA GPU",
+      "wall_time": "15 min",
+      "notes": "Inference on O4 data"
+    },
+    {
+      "step": "cw-veto-analysis",
+      "cpu_cores": 2,
+      "memory_gb": 4.0,
+      "gpu": "",
+      "wall_time": "10 min",
+      "notes": "Duty cycle computation"
+    },
+    {
+      "step": "threshold-test",
+      "cpu_cores": 1,
+      "memory_gb": 4.0,
+      "gpu": "",
+      "wall_time": "5 min",
+      "notes": "Spearman correlation tests"
+    },
+    {
+      "step": "random-split-ablation",
+      "cpu_cores": 4,
+      "memory_gb": 16.0,
+      "gpu": "1x NVIDIA GPU (>= 8 GB VRAM)",
+      "wall_time": "45 min",
+      "notes": "Full retraining with random split"
+    },
+    {
+      "step": "power-analysis",
+      "cpu_cores": 4,
+      "memory_gb": 4.0,
+      "gpu": "",
+      "wall_time": "20 min",
+      "notes": "10,000 simulation iterations"
+    },
+    {
+      "step": "extract-paper-numbers",
+      "cpu_cores": 1,
+      "memory_gb": 2.0,
+      "gpu": "",
+      "wall_time": "1 min",
+      "notes": "JSON aggregation"
+    },
+    {
+      "step": "generate-figures",
+      "cpu_cores": 1,
+      "memory_gb": 4.0,
+      "gpu": "",
+      "wall_time": "2 min",
+      "notes": "Matplotlib PDF rendering"
+    },
+    {
+      "step": "generate-tables",
+      "cpu_cores": 1,
+      "memory_gb": 2.0,
+      "gpu": "",
+      "wall_time": "1 min",
+      "notes": "LaTeX table generation"
+    }
+  ],
+  "minimum_viable": "4 cores, 16 GB RAM, 1x NVIDIA GPU (8 GB VRAM), ~6 hours total",
+  "recommended": "8+ cores, 32 GB RAM, 1x NVIDIA GPU (24 GB VRAM), ~3 hours",
+  "random_seeds": [
+    {
+      "computation": "train-cnn",
+      "seed": "42",
+      "purpose": "Reproducible CNN training"
+    },
+    {
+      "computation": "train-vit",
+      "seed": "42",
+      "purpose": "Reproducible ViT training"
+    },
+    {
+      "computation": "comparison-deliverables",
+      "seed": "42",
+      "purpose": "Reproducible bootstrap resampling"
+    },
+    {
+      "computation": "random-split-ablation",
+      "seed": "42",
+      "purpose": "Reproducible random split and retraining"
+    },
+    {
+      "computation": "power-analysis",
+      "seed": "42",
+      "purpose": "Reproducible power simulation"
+    }
+  ],
+  "seeding_strategy": "Fixed seed=42 for all stochastic steps. PyTorch deterministic mode enabled where supported.",
+  "known_platform_differences": [
+    {
+      "platform": "Different GPU architectures",
+      "issue": "Floating-point non-determinism across GPU generations may cause small metric differences",
+      "workaround": "Results should be within the reported bootstrap confidence intervals"
+    }
+  ],
+  "verification_steps": [
+    "Run the full pipeline from data download through figure generation",
+    "Compare key metrics (macro-F1, p-values) against paper_numbers.json expected values",
+    "Verify all 5 figures and 3 tables are generated"
+  ],
+  "manifest_created": "2026-03-18T14:30:00Z",
+  "last_verified": "2026-03-18T14:30:00Z",
+  "last_verified_platform": "Linux 6.6.87.2-microsoft-standard-WSL2, Python 3.12.3, CUDA 12.8, RTX 5090"
+}

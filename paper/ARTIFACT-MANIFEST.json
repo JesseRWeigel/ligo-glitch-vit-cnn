@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "paper_title": "When do Vision Transformers help? Class-dependent architecture preferences for gravitational-wave glitch classification",
+  "date": "2026-03-18",
+  "target_journal": "Classical and Quantum Gravity",
+  "figures": [
+    {
+      "id": "fig-per-class-f1",
+      "label": "Fig. 1",
+      "path": "paper/figures/fig_per_class_f1.pdf",
+      "kind": "grouped_bar_chart",
+      "role": "smoking_gun",
+      "caption_summary": "Per-class F1 scores on O3 test set for ViT-B/16 and ResNet-50v2 BiT across 23 classes",
+      "source_script": "paper/scripts/generate_figures.py",
+      "source_data": ["results/03-vit-rare-class/comparison_table.csv"],
+      "supports_claims": ["claim-rare-improvement", "claim-threshold"],
+      "decisive": true,
+      "checksum_sha256": "d2da814fe00065a452eb11de9464e5d1e7023c3c0358815fa8f13945997c692d",
+      "approximate_checksum": true,
+      "size_bytes": 30509
+    },
+    {
+      "id": "fig-threshold-scatter",
+      "label": "Fig. 2",
+      "path": "paper/figures/fig_threshold_scatter.pdf",
+      "kind": "scatter",
+      "role": "comparison",
+      "caption_summary": "Per-class F1 difference (ViT - CNN) vs training set size for O3 and O4",
+      "source_script": "paper/scripts/generate_figures.py",
+      "source_data": [
+        "results/03-vit-rare-class/comparison_table.csv",
+        "results/04-o4-validation/o4_threshold_test.json"
+      ],
+      "supports_claims": ["claim-threshold"],
+      "decisive": true,
+      "checksum_sha256": "22d43c98a158cd73a80b6df436663ebe5b982e8aa9ac06b534fd664d8f8d0970",
+      "approximate_checksum": true,
+      "size_bytes": 23689
+    },
+    {
+      "id": "fig-confusion-matrices",
+      "label": "Fig. 3",
+      "path": "paper/figures/fig_confusion_matrices.pdf",
+      "kind": "heatmap",
+      "role": "comparison",
+      "caption_summary": "Side-by-side confusion matrices on O3 test set for CNN and ViT",
+      "source_script": "paper/scripts/generate_figures.py",
+      "source_data": ["results/03-vit-rare-class/comparison_table.csv"],
+      "supports_claims": [],
+      "decisive": false,
+      "checksum_sha256": "957dc89d39605060efce96fb40e0e585e42a759d1722f2680a0455af78889011",
+      "approximate_checksum": true,
+      "size_bytes": 42063
+    },
+    {
+      "id": "fig-o4-degradation",
+      "label": "Fig. 4",
+      "path": "paper/figures/fig_o4_degradation.pdf",
+      "kind": "bar_chart",
+      "role": "benchmark",
+      "caption_summary": "Per-class F1 change from O3 to O4 (zero-shot) for both models",
+      "source_script": "paper/scripts/generate_figures.py",
+      "source_data": ["results/04-o4-validation/o4_comparison_table.csv"],
+      "supports_claims": ["claim-rare-improvement"],
+      "decisive": true,
+      "checksum_sha256": "d5d1ec1d28eb7deb12b0fd113fd3570b7c0385f542c9c1f228b91b6ea65518ce",
+      "approximate_checksum": true,
+      "size_bytes": 25741
+    },
+    {
+      "id": "fig-cw-veto",
+      "label": "Fig. 5",
+      "path": "paper/figures/fig_cw_veto.pdf",
+      "kind": "bar_chart",
+      "role": "comparison",
+      "caption_summary": "CW veto efficiency at matched deadtime and per-class duty cycle for CW-critical classes",
+      "source_script": "paper/scripts/generate_figures.py",
+      "source_data": [
+        "results/04-o4-validation/cw_veto_results.json",
+        "results/04-o4-validation/cw_duty_cycle_comparison.csv"
+      ],
+      "supports_claims": ["claim-cw-benefit"],
+      "decisive": true,
+      "checksum_sha256": "64ddc5b1b278e198dd3eec22887d79eb52c286398924974c96e50e38d69b70c0",
+      "approximate_checksum": true,
+      "size_bytes": 20624
+    }
+  ],
+  "tables": [
+    {
+      "id": "tab-overall",
+      "label": "Table I",
+      "path": "paper/tables/table_overall.tex",
+      "kind": "summary",
+      "role": "comparison",
+      "caption_summary": "Overall comparison metrics for ViT and CNN on O3 and O4 data",
+      "source_script": "paper/tables/generate_tables.py",
+      "source_data": ["paper/data/paper_numbers.json"],
+      "supports_claims": ["claim-rare-improvement"],
+      "decisive": true
+    },
+    {
+      "id": "tab-perclass",
+      "label": "Table II",
+      "path": "paper/tables/table_perclass.tex",
+      "kind": "detail",
+      "role": "comparison",
+      "caption_summary": "Per-class F1 for all 23 classes with bootstrap CIs",
+      "source_script": "paper/tables/generate_tables.py",
+      "source_data": ["paper/data/paper_numbers.json"],
+      "supports_claims": ["claim-rare-improvement"],
+      "decisive": true
+    },
+    {
+      "id": "tab-cw",
+      "label": "Table III",
+      "path": "paper/tables/table_cw.tex",
+      "kind": "detail",
+      "role": "comparison",
+      "caption_summary": "CW-critical class analysis with per-class duty cycle and veto efficiency",
+      "source_script": "paper/tables/generate_tables.py",
+      "source_data": ["paper/data/paper_numbers.json"],
+      "supports_claims": ["claim-cw-benefit"],
+      "decisive": true
+    }
+  ],
+  "data_files": [
+    {
+      "id": "paper-numbers",
+      "path": "paper/data/paper_numbers.json",
+      "description": "Single source of truth for all numerical values in the manuscript",
+      "source_scripts": ["scripts/extract_numbers.py"],
+      "role": "number_registry"
+    }
+  ],
+  "number_macros": {
+    "source": "paper/data/paper_numbers.json",
+    "defined_in": "paper/main.tex",
+    "count": 37,
+    "verified": true
+  },
+  "claim_coverage": {
+    "claim-rare-improvement": {
+      "figures": ["fig-per-class-f1", "fig-o4-degradation"],
+      "tables": ["tab-overall", "tab-perclass"],
+      "decisive_artifacts": 4
+    },
+    "claim-cw-benefit": {
+      "figures": ["fig-cw-veto"],
+      "tables": ["tab-cw"],
+      "decisive_artifacts": 2
+    },
+    "claim-threshold": {
+      "figures": ["fig-per-class-f1", "fig-threshold-scatter"],
+      "tables": [],
+      "decisive_artifacts": 2
+    }
+  }
+}

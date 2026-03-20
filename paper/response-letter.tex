@@ -1,0 +1,103 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+
+\newcommand{\revised}[1]{\textcolor{blue}{#1}}
+
+\begin{document}
+
+\noindent Dear Editor,
+
+\medskip
+
+We thank the reviewer for their careful and constructive report. We have revised the manuscript to address all 5 major and 8 minor issues raised. All changes are text revisions; no new experiments were required. Below we provide point-by-point responses.
+
+\bigskip
+
+\section*{Response to Referee}
+
+\subsection*{Major Issue 1 (REF-001): Rare-class narrative overclaimed}
+
+\textit{``The introduction states `yet rare-class performance declines' without qualification. The conclusion converts an underpowered observation into a causal narrative.''}
+
+\medskip
+
+We agree completely. The rare-class comparison has aggregate power of only 0.20, and the data provide insufficient evidence to determine even the direction of the effect.
+
+\textbf{Changes:} We have harmonized all rare-class language throughout the manuscript. The introduction now reads ``yet the rare-class comparison is statistically underpowered (aggregate power $= 0.20$), yielding insufficient evidence to determine whether ViT improves or degrades rare-class performance.'' The conclusion now frames the result as ``the rare-class comparison remains statistically underpowered, leaving insufficient evidence to determine whether CNN's inductive bias provides a meaningful advantage.'' The Discussion (Sec~4.1) conditions the inductive-bias interpretation on ``future multi-seed studies.''
+
+\subsection*{Major Issue 2 (REF-002): Novelty claim too broad}
+
+\textit{``Wu et al.\ (CQG 42, 165015) report class-wise accuracy tables. The novelty claim should be narrowed.''}
+
+\medskip
+
+We agree. Wu et al.\ report per-class metrics but with a different architecture and without paired statistical testing.
+
+\textbf{Changes:} We have narrowed the claim to ``identical-recipe paired comparison with statistical testing of per-class differences and simulation-based power analysis'' and added a clarifying sentence acknowledging Wu et al.'s per-class results (Introduction).
+
+\subsection*{Major Issue 3 (REF-003): Missing canonical review citation}
+
+\textit{``Cuoco et al.\ (2025) Living Reviews in Relativity is missing. Wu et al.\ should be updated to the published CQG version.''}
+
+\medskip
+
+\textbf{Changes:} We have added Cuoco et al.\ (2025) to the introduction and updated Wu et al.\ to CQG 42, 165015.
+
+\subsection*{Major Issue 4 (REF-004): Asymmetric hedging of interpretations}
+
+\textit{``The Power\_Line self-attention interpretation is presented as explanatory while the rare-class interpretation is hedged as speculative. Neither has direct evidence.''}
+
+\medskip
+
+We agree. We have applied consistent speculative qualification throughout.
+
+\textbf{Changes:} The Power\_Line interpretation now reads ``We hypothesize that this benefits classes with spatially distributed, multi-frequency structure\ldots but we lack direct evidence (attention maps or ablation studies) to confirm this mechanism.'' We also cite Raghu et al.\ (2021) for context on ViT representation structure.
+
+\subsection*{Major Issue 5 (REF-005): CW abstract conflates veto efficiency with duty cycle}
+
+\textit{``The abstract reports `approximately equal' veto efficiency without mentioning the CNN duty-cycle advantage.''}
+
+\medskip
+
+\textbf{Changes:} The abstract now includes the duty-cycle difference: ``though CNN retains a statistically significant duty-cycle advantage ($\Delta_\mathrm{DC} = -0.051$).'' We have also replaced ``first quantitative assessment'' with ``first proxy-level comparison'' in the introduction.
+
+\subsection*{Minor Issues (REF-006 through REF-013)}
+
+\begin{enumerate}
+  \item[6.] \textbf{REF-006:} Corrected ViT O4 macro-F1 from 0.670 to 0.669 (double-rounding fix).
+  \item[7.] \textbf{REF-007:} Changed ``all 8 rare classes'' to ``all 8 classes with small test sets.''
+  \item[8.] \textbf{REF-008:} Softened Sec~3.3 heading to ``No Significant Evidence That Architecture Preference Is a Monotonic Function of Sample Size.''
+  \item[9.] \textbf{REF-009:} Removed ad-hoc 20\% pass/fail threshold; now reports asymmetric degradation directly.
+  \item[10.] \textbf{REF-010:} Added He \& Garcia (2009) and Buda et al.\ (2018) citations; reframed forbidden-proxy discussion as GW demonstration of known principle.
+  \item[11.] \textbf{REF-011:} Added Raghu et al.\ (2021) citation for ViT interpretability context.
+  \item[12.] \textbf{REF-012:} Added footnote to Table~I explaining one-sided test direction and two-sided $p$-value.
+  \item[13.] \textbf{REF-013:} Updated Wu et al.\ citation from arXiv to CQG 42, 165015.
+\end{enumerate}
+
+\section*{Summary of Changes}
+
+\subsection*{Major changes}
+\begin{enumerate}
+  \item Harmonized rare-class language throughout: all directional claims replaced with ``insufficient evidence'' framing (Abstract, Introduction, Discussion, Conclusion).
+  \item Narrowed novelty claim to specify identical-recipe paired comparison with statistical testing and power analysis.
+  \item Added Cuoco et al.\ (2025) Living Reviews in Relativity and updated Wu et al.\ to published CQG version.
+  \item Applied consistent speculative qualification to all inductive-bias interpretations.
+  \item Abstract now reports both veto efficiency and duty-cycle difference for CW analysis.
+\end{enumerate}
+
+\subsection*{Minor changes}
+\begin{enumerate}
+  \item Corrected double-rounding error (ViT O4 macro-F1: 0.669).
+  \item Fixed ``8 rare classes'' labeling inconsistency.
+  \item Softened Sec~3.3 heading.
+  \item Removed unmotivated 20\% degradation threshold.
+  \item Added 4 new citations (Cuoco et al., He \& Garcia, Buda et al., Raghu et al.).
+  \item Added rare-class $p$-value footnote to Table~I.
+\end{enumerate}
+
+\bigskip
+\noindent Sincerely,\\
+Jesse Dawson
+
+\end{document}

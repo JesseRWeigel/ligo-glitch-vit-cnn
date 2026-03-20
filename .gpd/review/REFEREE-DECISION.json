@@ -1,0 +1,26 @@
+{
+  "manuscript_path": "paper/main.tex",
+  "target_journal": "cqg",
+  "final_recommendation": "major_revision",
+  "final_confidence": "high",
+  "stage_artifacts": [
+    ".gpd/review/STAGE-reader.json",
+    ".gpd/review/STAGE-literature.json",
+    ".gpd/review/STAGE-math.json",
+    ".gpd/review/STAGE-physics.json",
+    ".gpd/review/STAGE-interestingness.json"
+  ],
+  "central_claims_supported": true,
+  "claim_scope_proportionate_to_evidence": false,
+  "physical_assumptions_justified": true,
+  "unsupported_claims_are_central": false,
+  "reframing_possible_without_new_results": true,
+  "mathematical_correctness": "adequate",
+  "novelty": "adequate",
+  "significance": "adequate",
+  "venue_fit": "adequate",
+  "literature_positioning": "weak",
+  "unresolved_major_issues": 5,
+  "unresolved_minor_issues": 8,
+  "blocking_issue_ids": ["REF-001", "REF-002", "REF-003", "REF-004", "REF-005"]
+}

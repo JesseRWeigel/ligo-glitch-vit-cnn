@@ -1,0 +1,53 @@
+{
+  "overall_accuracy": 0.9544077304180486,
+  "overall_accuracy_ci": [
+    0.9525447324243541,
+    0.956270728411743
+  ],
+  "macro_f1": 0.7507010047648018,
+  "macro_f1_ci": [
+    0.7272905365364711,
+    0.7716274945212306
+  ],
+  "per_class_f1": {
+    "1080Lines": 0.7619047619047619,
+    "1400Ripples": 0.9071895424836601,
+    "Air_Compressor": 0.7991360691144709,
+    "Blip": 0.9632063074901446,
+    "Blip_Low_Frequency": 0.9382760482274609,
+    "Chirp": 0.2,
+    "Extremely_Loud": 0.9744545963080365,
+    "Fast_Scattering": 0.9721101138485634,
+    "Helix": 0.2,
+    "Koi_Fish": 0.9395449620801734,
+    "Light_Modulation": 0.5161290322580645,
+    "Low_Frequency_Burst": 0.993277070519239,
+    "Low_Frequency_Lines": 0.6760204081632653,
+    "No_Glitch": 0.9668141592920354,
+    "Paired_Doves": 0.25,
+    "Power_Line": 0.8138195777351248,
+    "Repeating_Blips": 0.8116591928251121,
+    "Scattered_Light": 0.975152643092696,
+    "Scratchy": 0.8165680473372781,
+    "Tomte": 0.9787891101178383,
+    "Violin_Mode": 0.5067385444743935,
+    "Wandering_Line": 0.375,
+    "Whistle": 0.9303329223181258
+  },
+  "temporal_split_accuracy": 0.9181,
+  "temporal_split_macro_f1": 0.6786,
+  "accuracy_gap_pp": 3.630773041804858,
+  "published_benchmark_range": [
+    0.95,
+    0.99
+  ],
+  "split_method": "stratified_random",
+  "n_train": 227943,
+  "n_val": 48845,
+  "n_test": 48846,
+  "seed": 42,
+  "best_epoch": 6,
+  "training_time_seconds": 3227.246288061142,
+  "bootstrap_resamples": 10000,
+  "confidence_level": 0.95
+}

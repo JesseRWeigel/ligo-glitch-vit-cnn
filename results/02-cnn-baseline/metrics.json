@@ -1,0 +1,343 @@
+{
+  "primary_metric": "macro_f1",
+  "macro_f1": {
+    "value": 0.6786466698931387,
+    "ci_lower": 0.6598085670240804,
+    "ci_upper": 0.6943544243952565,
+    "bootstrap_resamples": 10000,
+    "confidence_level": 0.95
+  },
+  "overall_accuracy": {
+    "value": 0.918108301770908,
+    "note": "SANITY CHECK ONLY -- not the primary metric (fp-overall-accuracy)"
+  },
+  "rare_class_macro_f1": {
+    "value": 0.30283224400871456,
+    "ci_lower": 0.20845926272007173,
+    "ci_upper": 0.3751079622132253,
+    "rare_classes": [
+      "Chirp",
+      "Wandering_Line",
+      "Helix",
+      "Light_Modulation"
+    ],
+    "rare_threshold_train": 200
+  },
+  "common_class_avg_f1": {
+    "value": 0.8074931179796714,
+    "common_classes": [
+      "Repeating_Blips",
+      "Air_Compressor",
+      "Power_Line",
+      "1400Ripples",
+      "Low_Frequency_Lines",
+      "Whistle",
+      "Blip",
+      "No_Glitch",
+      "Koi_Fish",
+      "Extremely_Loud",
+      "Blip_Low_Frequency",
+      "Low_Frequency_Burst",
+      "Tomte",
+      "Fast_Scattering",
+      "Scattered_Light"
+    ]
+  },
+  "rare_class_gap": {
+    "common_avg_f1": 0.8074931179796714,
+    "rare_avg_f1": 0.30283224400871456,
+    "gap_pp": 50.466087397095684
+  },
+  "per_class_f1": {
+    "Chirp": {
+      "f1": 0.47058823529411764,
+      "ci_lower": 0.125,
+      "ci_upper": 0.7272727272727274,
+      "n_train": 11,
+      "n_test": 7
+    },
+    "Wandering_Line": {
+      "f1": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "n_train": 30,
+      "n_test": 6
+    },
+    "Helix": {
+      "f1": 0.04938271604938272,
+      "ci_lower": 0.011764705882352943,
+      "ci_upper": 0.10062893081761005,
+      "n_train": 33,
+      "n_test": 14
+    },
+    "Light_Modulation": {
+      "f1": 0.691358024691358,
+      "ci_lower": 0.6063749194068344,
+      "ci_upper": 0.7682926829268293,
+      "n_train": 142,
+      "n_test": 66
+    },
+    "Paired_Doves": {
+      "f1": 0.098744769874477,
+      "ci_lower": 0.07620620136284828,
+      "ci_upper": 0.12283737024221453,
+      "n_train": 216,
+      "n_test": 64
+    },
+    "Violin_Mode": {
+      "f1": 0.6830015313935682,
+      "ci_lower": 0.6403614226040032,
+      "ci_upper": 0.7237053362719561,
+      "n_train": 274,
+      "n_test": 397
+    },
+    "1080Lines": {
+      "f1": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0,
+      "n_train": 341,
+      "n_test": 6
+    },
+    "Scratchy": {
+      "f1": 0.5034013605442176,
+      "ci_lower": 0.39999999999999997,
+      "ci_upper": 0.5986394557823129,
+      "n_train": 558,
+      "n_test": 76
+    },
+    "Repeating_Blips": {
+      "f1": 0.7702182284980744,
+      "ci_lower": 0.7367021276595744,
+      "ci_upper": 0.8021259136894158,
+      "n_train": 1061,
+      "n_test": 347
+    },
+    "Air_Compressor": {
+      "f1": 0.15384615384615385,
+      "ci_lower": 0.053315789473684365,
+      "ci_upper": 0.25742574257425743,
+      "n_train": 1361,
+      "n_test": 47
+    },
+    "Power_Line": {
+      "f1": 0.23529411764705882,
+      "ci_lower": 0.1308411214953271,
+      "ci_upper": 0.3356643356643357,
+      "n_train": 1582,
+      "n_test": 56
+    },
+    "1400Ripples": {
+      "f1": 0.7999999999999999,
+      "ci_lower": 0.6933333333333334,
+      "ci_upper": 0.888888888888889,
+      "n_train": 2428,
+      "n_test": 33
+    },
+    "Low_Frequency_Lines": {
+      "f1": 0.701435213260562,
+      "ci_lower": 0.686893793734961,
+      "ci_upper": 0.7157940059396699,
+      "n_train": 2853,
+      "n_test": 1743
+    },
+    "Whistle": {
+      "f1": 0.9627567925778662,
+      "ci_lower": 0.9583605780354787,
+      "ci_upper": 0.9670591427777613,
+      "n_train": 6299,
+      "n_test": 3689
+    },
+    "Blip": {
+      "f1": 0.9492682926829268,
+      "ci_lower": 0.9421691684864564,
+      "ci_upper": 0.9558471344319244,
+      "n_train": 7156,
+      "n_test": 2105
+    },
+    "No_Glitch": {
+      "f1": 0.9363867684478373,
+      "ci_lower": 0.9182684748427673,
+      "ci_upper": 0.953247360116519,
+      "n_train": 11568,
+      "n_test": 402
+    },
+    "Koi_Fish": {
+      "f1": 0.9565040650406504,
+      "ci_lower": 0.9506196872949643,
+      "ci_upper": 0.9622047952614202,
+      "n_train": 11950,
+      "n_test": 2503
+    },
+    "Extremely_Loud": {
+      "f1": 0.9858518964479229,
+      "ci_lower": 0.9829509379863517,
+      "ci_upper": 0.9885792971978385,
+      "n_train": 13469,
+      "n_test": 3317
+    },
+    "Blip_Low_Frequency": {
+      "f1": 0.9381939304219097,
+      "ci_lower": 0.9313668214039301,
+      "ci_upper": 0.9447086308824343,
+      "n_train": 13659,
+      "n_test": 2763
+    },
+    "Low_Frequency_Burst": {
+      "f1": 0.9914884783059995,
+      "ci_lower": 0.988802501252648,
+      "ci_upper": 0.993917383308829,
+      "n_train": 19834,
+      "n_test": 2397
+    },
+    "Tomte": {
+      "f1": 0.9630025853615047,
+      "ci_lower": 0.9594022527307977,
+      "ci_upper": 0.966551546111328,
+      "n_train": 30403,
+      "n_test": 5651
+    },
+    "Fast_Scattering": {
+      "f1": 0.957280385078219,
+      "ci_lower": 0.9551633724997405,
+      "ci_upper": 0.9593883668618671,
+      "n_train": 34555,
+      "n_test": 18998
+    },
+    "Scattered_Light": {
+      "f1": 0.8108698620783832,
+      "ci_lower": 0.8009213056016532,
+      "ci_upper": 0.8207472382315477,
+      "n_train": 68160,
+      "n_test": 4158
+    }
+  },
+  "per_class_recall": {
+    "Chirp": {
+      "recall": 0.5714285714285714,
+      "ci_lower": 0.16666666666666666,
+      "ci_upper": 1.0
+    },
+    "Wandering_Line": {
+      "recall": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0
+    },
+    "Helix": {
+      "recall": 0.2857142857142857,
+      "ci_lower": 0.0625,
+      "ci_upper": 0.5455681818181801
+    },
+    "Light_Modulation": {
+      "recall": 0.8484848484848485,
+      "ci_lower": 0.75,
+      "ci_upper": 0.9310462919225316
+    },
+    "Paired_Doves": {
+      "recall": 0.921875,
+      "ci_lower": 0.8513513513513513,
+      "ci_upper": 0.9827586206896551
+    },
+    "Violin_Mode": {
+      "recall": 0.5617128463476071,
+      "ci_lower": 0.5126039863181453,
+      "ci_upper": 0.6109818350570141
+    },
+    "1080Lines": {
+      "recall": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0
+    },
+    "Scratchy": {
+      "recall": 0.4868421052631579,
+      "ci_lower": 0.37333333333333335,
+      "ci_upper": 0.6
+    },
+    "Repeating_Blips": {
+      "recall": 0.8645533141210374,
+      "ci_lower": 0.8273605141206891,
+      "ci_upper": 0.8997216371885167
+    },
+    "Air_Compressor": {
+      "recall": 0.14893617021276595,
+      "ci_lower": 0.05128205128205128,
+      "ci_upper": 0.2564102564102564
+    },
+    "Power_Line": {
+      "recall": 0.25,
+      "ci_lower": 0.1428068410462781,
+      "ci_upper": 0.3684412955465584
+    },
+    "1400Ripples": {
+      "recall": 0.9696969696969697,
+      "ci_lower": 0.8974358974358975,
+      "ci_upper": 1.0
+    },
+    "Low_Frequency_Lines": {
+      "recall": 0.9954102122776821,
+      "ci_lower": 0.9919907320689668,
+      "ci_upper": 0.9982905982905983
+    },
+    "Whistle": {
+      "recall": 0.9845486581729466,
+      "ci_lower": 0.9804353666718583,
+      "ci_upper": 0.9884003841483557
+    },
+    "Blip": {
+      "recall": 0.9244655581947744,
+      "ci_lower": 0.912895335220415,
+      "ci_upper": 0.9355907896062441
+    },
+    "No_Glitch": {
+      "recall": 0.9154228855721394,
+      "ci_lower": 0.8870578337104073,
+      "ci_upper": 0.9418886198547215
+    },
+    "Koi_Fish": {
+      "recall": 0.9400719137035557,
+      "ci_lower": 0.9307442928865385,
+      "ci_upper": 0.9492369449441509
+    },
+    "Extremely_Loud": {
+      "recall": 0.9873379559843232,
+      "ci_lower": 0.9834486397931134,
+      "ci_upper": 0.9909447630546333
+    },
+    "Blip_Low_Frequency": {
+      "recall": 0.9174809989142236,
+      "ci_lower": 0.907510374401637,
+      "ci_upper": 0.9274074074074075
+    },
+    "Low_Frequency_Burst": {
+      "recall": 0.9962453066332916,
+      "ci_lower": 0.993619736282433,
+      "ci_upper": 0.9983693436608235
+    },
+    "Tomte": {
+      "recall": 0.9557600424703593,
+      "ci_lower": 0.950423392559904,
+      "ci_upper": 0.961020612171687
+    },
+    "Fast_Scattering": {
+      "recall": 0.9212022318138752,
+      "ci_lower": 0.917276675821925,
+      "ci_upper": 0.925021133596203
+    },
+    "Scattered_Light": {
+      "recall": 0.714045214045214,
+      "ci_lower": 0.6999520919540434,
+      "ci_upper": 0.7276771159682861
+    }
+  },
+  "model": {
+    "architecture": "resnetv2_50x1_bit.goog_in21k_ft_in1k",
+    "pretrained": "ImageNet-21k fine-tuned on ImageNet-1k",
+    "best_epoch": 14,
+    "seed": 42
+  },
+  "metric_consistency": {
+    "sklearn_macro_f1": 0.6786466698931387,
+    "torchmetrics_macro_f1": 0.6786467432975769,
+    "difference": 7.340443819447984e-08,
+    "match": true
+  }
+}

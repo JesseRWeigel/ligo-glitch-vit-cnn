@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "round": 1,
+  "stage_id": "physics",
+  "stage_kind": "physics",
+  "manuscript_path": "paper/main.tex",
+  "manuscript_sha256": "0780ee5f89b8af1949aa7e802c7919c671ae2eefa8cac2066fa563f0cb5ddcfe",
+  "claims_reviewed": [
+    "CLM-001", "CLM-002", "CLM-003", "CLM-004", "CLM-006",
+    "CLM-007", "CLM-008", "CLM-009", "CLM-010", "CLM-013", "CLM-014"
+  ],
+  "summary": "The paper is an applied ML study whose physical content lies in (a) the connection between classifier performance and detector characterization, (b) the CW veto proxy analysis, and (c) the inductive-bias interpretations linking ViT/CNN architecture to glitch morphology. The regime of validity is narrow but mostly honestly declared: O3-specific, single-view, sample-count-based CW proxy. However, the paper has two physical-interpretation problems that cross the line from honest speculation into unsupported claim. First, the Power_Line self-attention narrative (CLM-007) is presented asymmetrically: it is framed as an explanation in the abstract, per-class results, and conclusion, while the parallel rare-class CNN narrative is hedged as speculative. No direct evidence (attention maps, ablations, controlled morphology experiments) supports either interpretation, so both should be consistently labeled as hypotheses. Second, the CW veto analysis (CLM-006, CLM-010, CLM-013) conflates veto efficiency with duty cycle in the abstract, and the 'approximately equal' framing hides a statistically significant 5pp CNN duty-cycle advantage. The Power_Line CW claim (CLM-013) is the strongest physical finding but relies on a sample-count proxy that the paper itself admits is coarse. Neither of these rises to the level of a blocker -- the paper does not make fundamental physical errors -- but they require targeted revision to bring physical claims into alignment with the evidence. The regime-of-validity declarations (O3-specific, single-seed, coarse CW proxy) are present and adequate, though the 20% O4 degradation threshold is unmotivated.",
+  "strengths": [
+    "Physical regime of validity is explicitly declared: O3-specific observations, not universal laws (Sec 4.2, line 559). This is the correct level of claim for the evidence.",
+    "The paper correctly identifies that temporal data leakage is a physical concern for GW detector data and implements a GPS-time-based split with 60-second gaps, which is well-motivated by the physics of glitch temporal clustering.",
+    "CW-critical class selection (7 classes based on 20-2000 Hz overlap) is physically reasonable and well-motivated by the CW search frequency band.",
+    "The stationarity assumption underlying the duty-cycle proxy is stated explicitly (line 297-299) rather than left implicit, and the limitation is acknowledged in the discussion (Sec 4.3, lines 585-589).",
+    "The honest non-replication on O4 is physically meaningful: detector upgrades between observing runs change the noise floor and glitch morphologies, so O3-calibrated per-class preferences should not be expected to transfer. The paper gets this physics right."
+  ],
+  "findings": [
+    {
+      "issue_id": "PHY-001",
+      "claim_ids": ["CLM-007"],
+      "severity": "major",
+      "summary": "The Power_Line self-attention interpretation is presented as explanatory rather than hypothetical, creating an asymmetry with the hedged rare-class interpretation.",
+      "rationale": "Section 3.1 (line 339-340) states Power_Line 'benefits from ViT's global self-attention' as a factual explanation. Section 4.1 (line 525-529) frames it as a 'natural interpretation' and describes it as if the mechanism is understood: 'local convolutional filters may struggle to integrate' the harmonic structure. In contrast, the rare-class CNN interpretation (line 541) is explicitly labeled 'speculative'. The Power_Line interpretation is equally speculative: no attention maps, no ablation removing specific frequency bands, no controlled experiment with synthetic harmonic patterns has been performed. The claim that self-attention captures multi-frequency harmonic structure is a plausible hypothesis consistent with the architecture, but it is not evidence. For CQG, where physical-mechanism claims carry weight, the asymmetric hedging creates an impression of established physics where only empirical pattern-matching exists.",
+      "evidence_refs": [
+        "paper/main.tex#Sec 3.1",
+        "paper/main.tex#Sec 4.1"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:339-340",
+        "paper/main.tex:523-534"
+      ],
+      "support_status": "unsupported",
+      "blocking": false,
+      "required_action": "Apply the same 'speculative' or 'hypothetical' qualification to the Power_Line self-attention interpretation that is already applied to the rare-class CNN interpretation. In the abstract (line 113), use 'where global self-attention may capture' instead of implying established mechanism. In Sec 4.1, explicitly state that without attention-map or ablation evidence, the harmonic-structure interpretation is a hypothesis, not a demonstrated mechanism."
+    },
+    {
+      "issue_id": "PHY-002",
+      "claim_ids": ["CLM-010", "CLM-006", "CLM-013"],
+      "severity": "major",
+      "summary": "The CW veto analysis conflates two distinct physical quantities (veto efficiency and duty cycle) in the abstract and overstates the 'approximately equal' conclusion.",
+      "rationale": "The abstract (line 117-118) reports 'veto efficiency for continuous-wave searches is approximately equal (ViT 0.745 vs CNN 0.735)' without mentioning that the operationally relevant quantity -- duty cycle -- shows a statistically significant CNN advantage (delta_DC = -0.051, CI [-0.054, -0.048], does not contain zero). For CW searches, livetime (duty cycle) directly enters the sensitivity through integrated observation time. Veto efficiency alone is insufficient: a model that vetoes everything has perfect efficiency but zero livetime. The abstract creates the impression that the CW implications are neutral, when the full picture is that CNN retains 5% more observation time at the matched operating point. Table 3 correctly presents both quantities, but the abstract -- which many readers will rely on -- does not. This is a physical-interpretation problem because it affects how CW practitioners would evaluate the architectures.",
+      "evidence_refs": [
+        "paper/main.tex#Abstract",
+        "paper/tables/table_cw.tex",
+        "paper/main.tex#Sec 3.6"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:117-118",
+        "paper/main.tex:480-483"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "The abstract must mention the duty-cycle difference alongside veto efficiency. Suggested revision: 'At matched deadtime (22.4%), veto efficiency is approximately equal (ViT 0.745 vs CNN 0.735), though CNN retains approximately 5% more observation time overall.' This gives the reader both sides of the CW tradeoff."
+    },
+    {
+      "issue_id": "PHY-003",
+      "claim_ids": ["CLM-008", "CLM-001"],
+      "severity": "major",
+      "summary": "The conclusion converts the underpowered rare-class observation into a directional physical claim about CNN inductive bias providing regularization.",
+      "rationale": "Line 693-695 states: 'CNN retains advantages on rare classes where limited training data appears insufficient for learning effective attention patterns.' This converts a statistically underpowered observation (p=0.884, power=0.20) into a causal physical narrative about the mechanism of CNN advantage (inductive bias as regularization). The paper's own analysis shows this comparison lacks statistical power to determine even the direction of the effect, let alone its mechanism. The introduction (line 193) similarly states 'yet rare-class performance declines' without qualification. This is the most important physical-interpretation problem in the paper because it is the mechanism that connects the empirical observation to the 'class-dependent architecture preference' headline claim. If the rare-class direction is uncertain, then the claim that CNN's inductive bias provides better regularization from limited data is physically unsupported by the evidence presented. The reader and math stages both flagged this (RDR-001, MATH-005), and the physics stage confirms it is a genuine physical-soundness issue: the inductive-bias regularization narrative is post-hoc fitting to an underpowered observation.",
+      "evidence_refs": [
+        "paper/main.tex#Introduction",
+        "paper/main.tex#Conclusion",
+        "paper/main.tex#Sec 4.1",
+        "paper/tables/table_overall.tex"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:193",
+        "paper/main.tex:536-544",
+        "paper/main.tex:693-695"
+      ],
+      "support_status": "unsupported",
+      "blocking": true,
+      "required_action": "Harmonize all rare-class language with the abstract's careful phrasing. The introduction, discussion, and conclusion must frame the rare-class result as 'insufficient statistical evidence' throughout. The inductive-bias regularization interpretation (Sec 4.1) should be explicitly conditioned on the rare-class direction being confirmed by future studies with adequate power, not presented as an explanation of an established finding."
+    },
+    {
+      "issue_id": "PHY-004",
+      "claim_ids": ["CLM-006"],
+      "severity": "minor",
+      "summary": "The duty-cycle metric is a sample-count proxy, not a physical livetime measurement, but is called a 'quantitative assessment' of CW data quality.",
+      "rationale": "The introduction (line 188-190) frames the CW analysis as 'the first quantitative assessment of ViT vs CNN classification quality for continuous gravitational-wave search data quality.' The analysis uses sample counts with an assumed 1.0-second duration per glitch to compute duty cycle, without GPS-referenced time segments or noise PSD weighting. For CW searches, the relevant quantity is the integrated sensitivity, which depends on the noise power spectral density of retained segments, not just the fraction of time retained. The paper acknowledges this in limitations (line 647-648) and discussion (lines 585-589), but uses 'quantitative assessment' in the introduction without qualification. The physics issue is that sample-count duty cycle is not proportional to CW sensitivity when the noise PSD varies across the observation period -- a condition that holds for real LIGO data. The stationarity assumption (line 297-299) required for the proxy to be valid is stated but not tested.",
+      "evidence_refs": [
+        "paper/main.tex#Introduction",
+        "paper/main.tex#Sec 2.4",
+        "paper/main.tex#Limitations"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:188-190",
+        "paper/main.tex:297-299",
+        "paper/main.tex:647-648"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Replace 'first quantitative assessment' with 'first proxy-level comparison' or 'first exploratory assessment' in the introduction, with a parenthetical noting the sample-count basis. This aligns the introduction with the honest limitations section."
+    },
+    {
+      "issue_id": "PHY-005",
+      "claim_ids": ["CLM-009"],
+      "severity": "minor",
+      "summary": "The 20% O4 degradation threshold is physically unmotivated and frames asymmetric results as equivalent.",
+      "rationale": "Both models are reported as passing a '<20% relative degradation' threshold on O4 (line 448-450), but ViT degrades 7.4% vs CNN 1.7% -- a 4.4x ratio. The 20% threshold is not derived from any CW sensitivity requirement, detector characterization standard, or literature benchmark. It is an ad-hoc criterion that treats qualitatively different degradation rates as equivalent. Asymmetric O4 degradation (ViT 4x worse) is physically meaningful: it suggests ViT's learned features are more O3-specific, consistent with the interpretation that self-attention can overfit to observing-run-specific spectral correlations (Sec 4.2, lines 566-568). The pass/fail framing buries this asymmetry.",
+      "evidence_refs": [
+        "paper/main.tex#Sec 3.5",
+        "paper/tables/table_overall.tex"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:448-450"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Either motivate the 20% threshold from the literature or a specific operational requirement, or remove the pass/fail framing and simply report the degradation numbers with their ratio. The asymmetric degradation is a physically interesting finding that the current framing underplays."
+    },
+    {
+      "issue_id": "PHY-006",
+      "claim_ids": ["CLM-004"],
+      "severity": "minor",
+      "summary": "The section heading 'Architecture Preference Is Not a Monotonic Function of Sample Size' states absence of correlation as a positive finding, but the Spearman test with n=23 has very low power to detect moderate correlations.",
+      "rationale": "With 23 data points, the Spearman test has power of approximately 0.08 to detect rho=-0.12 at alpha=0.05. The correct physical interpretation is 'we found no evidence of a monotonic relationship' (absence of evidence), not 'the relationship is not monotonic' (evidence of absence). The math stage (MATH-005) flagged this as a statistical suggestion; from the physics perspective, it matters because the paper uses this non-significant result to pivot from a sample-size narrative to a class-morphology narrative (lines 415-421), and the pivot rests on interpreting a low-powered null result as evidence against the sample-size hypothesis. The class-morphology interpretation may well be correct, but it is not established by failing to reject the null with an underpowered test.",
+      "evidence_refs": [
+        "paper/main.tex#Sec 3.3"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:389",
+        "paper/main.tex:410-421"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Soften the section heading to 'No significant evidence that architecture preference is a monotonic function of sample size.' In the body, acknowledge that the test has low power and cannot rule out moderate correlations. The pivot to the class-morphology narrative should be framed as an alternative interpretation consistent with the data, not as a conclusion driven by the non-significant Spearman result."
+    },
+    {
+      "issue_id": "PHY-007",
+      "claim_ids": ["CLM-013"],
+      "severity": "minor",
+      "summary": "The Power_Line CW relevance claim (60 Hz harmonics contaminate CW searches in the most sensitive bands) is physically correct but the quantitative connection between F1 advantage and CW sensitivity improvement is not established.",
+      "rationale": "Section 3.6 (lines 505-509) states that ViT's Power_Line F1 advantage 'translates to substantially better veto efficiency for this class (ViT 53.9% vs CNN 10.7%).' This is the most physically grounded claim in the paper: 60 Hz power-line harmonics do contaminate CW searches, and better identification does improve data quality. However, the paper does not connect the per-class veto efficiency to an actual CW sensitivity improvement (e.g., in strain upper limit or detection probability). The claim that the F1 advantage 'translates to substantially better veto efficiency' is supported by the numbers, but the further claim that this is 'the most CW-relevant finding' (line 505) assumes that Power_Line vetoing is the dominant factor in CW sensitivity -- which depends on the frequency-dependent noise budget, something not analyzed. This is a minor issue because the paper correctly identifies the limitation (Sec 4.3) and leaves frequency-resolved analysis to future work.",
+      "evidence_refs": [
+        "paper/main.tex#Sec 3.6",
+        "paper/main.tex#Sec 4.3"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:505-509"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Add a brief qualifier: 'the most CW-relevant finding in our analysis' rather than implying it is the most CW-relevant finding in general. Alternatively, note that the actual impact on CW sensitivity depends on the frequency-dependent noise budget, which this analysis does not quantify."
+    }
+  ],
+  "physical_assumptions": [
+    {
+      "assumption": "Noise stationarity across observation period",
+      "location": "paper/main.tex:297-299",
+      "status": "stated",
+      "assessment": "Reasonable as a first approximation. LIGO noise is non-stationary on timescales of hours, but the duty-cycle proxy is acknowledged as coarse. The assumption is necessary for the sample-count proxy to be proportional to integrated CW sensitivity."
+    },
+    {
+      "assumption": "Q-transform spectrogram morphology captures physically relevant glitch features",
+      "location": "paper/main.tex:210-215",
+      "status": "implicit",
+      "assessment": "Well-established in the Gravity Spy literature. Q-transform spectrograms are the standard representation for glitch classification."
+    },
+    {
+      "assumption": "ImageNet transfer features are adequate for spectrogram classification",
+      "location": "paper/main.tex:237-247",
+      "status": "implicit",
+      "assessment": "Empirically validated by the achieved F1 scores but not physically justified. This is standard practice in the field."
+    },
+    {
+      "assumption": "Temporal split with 60-second gaps prevents data leakage from correlated glitches",
+      "location": "paper/main.tex:229-232",
+      "status": "stated",
+      "assessment": "Physically motivated. Glitch rates are temporally correlated (clustered near lock losses, environmental events). The 60-second gap is conservative for most glitch types but may be insufficient for long-duration environmental correlations."
+    },
+    {
+      "assumption": "Seven CW-critical classes identified by spectral overlap with 20-2000 Hz band",
+      "location": "paper/main.tex:301-303",
+      "status": "stated",
+      "assessment": "Physically reasonable. The seven classes all have frequency content overlapping the CW search band. However, the paper notes this taxonomy is based on morphological analysis, not consultation with CW search experts."
+    }
+  ],
+  "regime_of_validity": {
+    "spatial_temporal": "O3 LIGO Hanford and Livingston data; zero-shot evaluation on O4a",
+    "parameter_range": "23-class Gravity Spy taxonomy; 11 to 68,160 training samples per class; 224x224 pixel RGB spectrograms at 10-2048 Hz",
+    "stated_limitations": "O3-specific observations, single training seed, single-view (1.0s) spectrograms, sample-count CW proxy, fixed taxonomy",
+    "unstated_limitations": [
+      "No multi-detector (Virgo, KAGRA) evaluation",
+      "No evaluation of impact on actual GW search pipelines (matched filtering, burst searches)",
+      "No assessment of whether the per-class patterns are stable across different random seeds (acknowledged but not quantified)",
+      "No evaluation against more recent architectures (DINOv2, ConvNeXt, etc.)"
+    ],
+    "assessment": "The stated regime of validity is adequate and honestly declared. The key gap is the single-seed limitation, which the paper acknowledges but does not sufficiently propagate into the strength of its per-class claims."
+  },
+  "confidence": "high",
+  "recommendation_ceiling": "major_revision"
+}

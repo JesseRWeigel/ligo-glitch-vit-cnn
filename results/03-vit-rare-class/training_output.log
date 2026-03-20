@@ -1,0 +1,83 @@
+2026-03-17 09:42:43,192 INFO Device: cuda
+2026-03-17 09:42:43,213 INFO GPU: NVIDIA GeForce RTX 5090
+2026-03-17 09:42:43,213 INFO CUDA version: 12.8
+2026-03-17 09:42:43,213 INFO VRAM: 34.2 GB
+2026-03-17 09:42:43,213 INFO PyTorch version: 2.10.0+cu128
+2026-03-17 09:42:43,213 INFO Python: 3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]
+2026-03-17 09:42:43,214 INFO Platform: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
+2026-03-17 09:42:43,214 INFO Loading datasets...
+2026-03-17 09:42:43,888 INFO Train: 227943 samples, Val: 48844 samples
+2026-03-17 09:42:43,888 INFO Classes: 23
+2026-03-17 09:42:43,892 INFO Loading ViT-B/16 model...
+2026-03-17 09:42:44,348 INFO Loading pretrained weights from Hugging Face hub (timm/vit_base_patch16_224.augreg_in21k_ft_in1k)
+2026-03-17 09:42:44,563 INFO HTTP Request: HEAD https://huggingface.co/timm/vit_base_patch16_224.augreg_in21k_ft_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+2026-03-17 09:42:44,563 INFO [timm/vit_base_patch16_224.augreg_in21k_ft_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2026-03-17 09:42:44,596 INFO Missing keys (head.weight, head.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+2026-03-17 09:42:44,607 INFO Loaded model: vit_base_patch16_224.augreg_in21k_ft_in1k (AugReg ImageNet-21k fine-tuned on ImageNet-1k)
+2026-03-17 09:42:44,607 INFO Total params: 85.8M, Trainable: 85.8M
+2026-03-17 09:42:44,732 INFO Output shape verified: (B, 3, 224, 224) -> (B, 23)
+2026-03-17 09:42:44,903 INFO Layer-wise LR groups:
+2026-03-17 09:42:44,903 INFO   Group  0: lr=2.38e-06, wd=0.0100, params=0.74M
+2026-03-17 09:42:44,903 INFO   Group  1: lr=2.38e-06, wd=0.0000, params=0.00M
+2026-03-17 09:42:44,903 INFO   Group  2: lr=3.17e-06, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group  3: lr=3.17e-06, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group  4: lr=4.22e-06, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group  5: lr=4.22e-06, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group  6: lr=5.63e-06, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group  7: lr=5.63e-06, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group  8: lr=7.51e-06, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group  9: lr=7.51e-06, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group 10: lr=1.00e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group 11: lr=1.00e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group 12: lr=1.33e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group 13: lr=1.33e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group 14: lr=1.78e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group 15: lr=1.78e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group 16: lr=2.37e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group 17: lr=2.37e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group 18: lr=3.16e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group 19: lr=3.16e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,903 INFO   Group 20: lr=4.22e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,903 INFO   Group 21: lr=4.22e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,904 INFO   Group 22: lr=5.63e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,904 INFO   Group 23: lr=5.63e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,904 INFO   Group 24: lr=7.50e-05, wd=0.0000, params=0.01M
+2026-03-17 09:42:44,904 INFO   Group 25: lr=7.50e-05, wd=0.0100, params=7.08M
+2026-03-17 09:42:44,904 INFO   Group 26: lr=1.00e-04, wd=0.0100, params=0.02M
+2026-03-17 09:42:44,904 INFO   Group 27: lr=1.00e-04, wd=0.0000, params=0.00M
+2026-03-17 09:42:44,904 INFO   LR range: [2.38e-06, 1.00e-04]
+2026-03-17 09:42:44,904 INFO Starting training: 100 max epochs, patience=10, base_lr=0.0001, layer_decay=0.75
+2026-03-17 09:46:52,385 INFO Epoch   1/100 | Train Loss: 1.3204 | Val Loss: 0.1260 | Val Macro-F1: 0.5776 | Val Acc: 0.9439 | LR: 0.000020 | VRAM: 5.7GB | Time: 247.5s
+2026-03-17 09:46:53,138 INFO   -> New best! Saved checkpoint (macro-F1=0.5776)
+2026-03-17 09:50:58,015 INFO Epoch   2/100 | Train Loss: 0.2759 | Val Loss: 0.1268 | Val Macro-F1: 0.6394 | Val Acc: 0.9484 | LR: 0.000040 | VRAM: 5.7GB | Time: 244.9s
+2026-03-17 09:50:58,852 INFO   -> New best! Saved checkpoint (macro-F1=0.6394)
+2026-03-17 09:55:01,812 INFO Epoch   3/100 | Train Loss: 0.1841 | Val Loss: 0.1147 | Val Macro-F1: 0.6505 | Val Acc: 0.9512 | LR: 0.000060 | VRAM: 5.7GB | Time: 243.0s
+2026-03-17 09:55:02,658 INFO   -> New best! Saved checkpoint (macro-F1=0.6505)
+2026-03-17 09:59:07,399 INFO Epoch   4/100 | Train Loss: 0.1447 | Val Loss: 0.0795 | Val Macro-F1: 0.7567 | Val Acc: 0.9807 | LR: 0.000080 | VRAM: 5.7GB | Time: 244.7s
+2026-03-17 09:59:08,305 INFO   -> New best! Saved checkpoint (macro-F1=0.7567)
+2026-03-17 10:03:13,069 INFO Epoch   5/100 | Train Loss: 0.1266 | Val Loss: 0.0916 | Val Macro-F1: 0.7453 | Val Acc: 0.9760 | LR: 0.000100 | VRAM: 5.7GB | Time: 244.8s
+2026-03-17 10:07:13,802 INFO Epoch   6/100 | Train Loss: 0.1064 | Val Loss: 0.0792 | Val Macro-F1: 0.7681 | Val Acc: 0.9825 | LR: 0.000100 | VRAM: 5.7GB | Time: 240.7s
+2026-03-17 10:07:14,736 INFO   -> New best! Saved checkpoint (macro-F1=0.7681)
+2026-03-17 10:11:17,401 INFO Epoch   7/100 | Train Loss: 0.0768 | Val Loss: 0.0814 | Val Macro-F1: 0.7693 | Val Acc: 0.9852 | LR: 0.000100 | VRAM: 5.7GB | Time: 242.7s
+2026-03-17 10:11:18,764 INFO   -> New best! Saved checkpoint (macro-F1=0.7693)
+2026-03-17 10:15:25,898 INFO Epoch   8/100 | Train Loss: 0.0646 | Val Loss: 0.1071 | Val Macro-F1: 0.7356 | Val Acc: 0.9716 | LR: 0.000100 | VRAM: 5.7GB | Time: 247.1s
+2026-03-17 10:19:33,458 INFO Epoch   9/100 | Train Loss: 0.0548 | Val Loss: 0.1373 | Val Macro-F1: 0.7280 | Val Acc: 0.9604 | LR: 0.000100 | VRAM: 5.7GB | Time: 247.6s
+2026-03-17 10:23:40,555 INFO Epoch  10/100 | Train Loss: 0.0472 | Val Loss: 0.1198 | Val Macro-F1: 0.7589 | Val Acc: 0.9698 | LR: 0.000099 | VRAM: 5.7GB | Time: 247.1s
+2026-03-17 10:27:46,113 INFO Epoch  11/100 | Train Loss: 0.0414 | Val Loss: 0.1998 | Val Macro-F1: 0.7401 | Val Acc: 0.9445 | LR: 0.000099 | VRAM: 5.7GB | Time: 245.6s
+2026-03-17 10:31:53,350 INFO Epoch  12/100 | Train Loss: 0.0375 | Val Loss: 0.1148 | Val Macro-F1: 0.7546 | Val Acc: 0.9782 | LR: 0.000099 | VRAM: 5.7GB | Time: 247.2s
+2026-03-17 10:35:59,616 INFO Epoch  13/100 | Train Loss: 0.0358 | Val Loss: 0.1285 | Val Macro-F1: 0.7723 | Val Acc: 0.9774 | LR: 0.000098 | VRAM: 5.7GB | Time: 246.3s
+2026-03-17 10:36:00,626 INFO   -> New best! Saved checkpoint (macro-F1=0.7723)
+2026-03-17 10:40:06,936 INFO Epoch  14/100 | Train Loss: 0.0327 | Val Loss: 0.2102 | Val Macro-F1: 0.7446 | Val Acc: 0.9503 | LR: 0.000098 | VRAM: 5.7GB | Time: 246.3s
+2026-03-17 10:44:20,833 INFO Epoch  15/100 | Train Loss: 0.0286 | Val Loss: 0.1046 | Val Macro-F1: 0.7571 | Val Acc: 0.9874 | LR: 0.000097 | VRAM: 5.7GB | Time: 253.9s
+2026-03-17 10:48:27,498 INFO Epoch  16/100 | Train Loss: 0.0284 | Val Loss: 0.1536 | Val Macro-F1: 0.7479 | Val Acc: 0.9715 | LR: 0.000097 | VRAM: 5.7GB | Time: 246.7s
+2026-03-17 10:52:37,117 INFO Epoch  17/100 | Train Loss: 0.0254 | Val Loss: 0.1523 | Val Macro-F1: 0.7446 | Val Acc: 0.9631 | LR: 0.000096 | VRAM: 5.7GB | Time: 249.6s
+2026-03-17 10:56:45,153 INFO Epoch  18/100 | Train Loss: 0.0264 | Val Loss: 0.1932 | Val Macro-F1: 0.7253 | Val Acc: 0.9637 | LR: 0.000095 | VRAM: 5.7GB | Time: 248.0s
+2026-03-17 11:00:51,204 INFO Epoch  19/100 | Train Loss: 0.0222 | Val Loss: 0.1452 | Val Macro-F1: 0.7723 | Val Acc: 0.9792 | LR: 0.000095 | VRAM: 5.7GB | Time: 246.1s
+2026-03-17 11:04:57,059 INFO Epoch  20/100 | Train Loss: 0.0221 | Val Loss: 0.1307 | Val Macro-F1: 0.7810 | Val Acc: 0.9779 | LR: 0.000094 | VRAM: 5.7GB | Time: 245.9s
+2026-03-17 11:04:58,043 INFO   -> New best! Saved checkpoint (macro-F1=0.7810)
+2026-03-17 11:09:07,122 INFO Epoch  21/100 | Train Loss: 0.0217 | Val Loss: 0.1628 | Val Macro-F1: 0.7221 | Val Acc: 0.9744 | LR: 0.000093 | VRAM: 5.7GB | Time: 249.1s
+2026-03-17 11:13:15,188 INFO Epoch  22/100 | Train Loss: 0.0187 | Val Loss: 0.1711 | Val Macro-F1: 0.7473 | Val Acc: 0.9716 | LR: 0.000092 | VRAM: 5.7GB | Time: 248.1s
+2026-03-17 11:17:23,112 INFO Epoch  23/100 | Train Loss: 0.0177 | Val Loss: 0.1876 | Val Macro-F1: 0.7308 | Val Acc: 0.9706 | LR: 0.000091 | VRAM: 5.7GB | Time: 247.9s
+2026-03-17 11:21:29,409 INFO Epoch  24/100 | Train Loss: 0.0165 | Val Loss: 0.1979 | Val Macro-F1: 0.7377 | Val Acc: 0.9608 | LR: 0.000090 | VRAM: 5.7GB | Time: 246.3s
+2026-03-17 11:25:33,637 INFO Epoch  25/100 | Train Loss: 0.0156 | Val Loss: 0.1954 | Val Macro-F1: 0.7287 | Val Acc: 0.9689 | LR: 0.000089 | VRAM: 5.7GB | Time: 244.2s
+2026-03-17 11:29:38,646 INFO Epoch  26/100 | Train Loss: 0.0178 | Val Loss: 0.1792 | Val Macro-F1: 0.7452 | Val Acc: 0.9711 | LR: 0.000088 | VRAM: 5.7GB | Time: 245.0s

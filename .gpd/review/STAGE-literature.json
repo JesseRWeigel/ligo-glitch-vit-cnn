@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "round": 1,
+  "stage_id": "literature",
+  "stage_kind": "literature",
+  "manuscript_path": "paper/main.tex",
+  "manuscript_sha256": "0780ee5f89b8af1949aa7e802c7919c671ae2eefa8cac2066fa563f0cb5ddcfe",
+  "claims_reviewed": [
+    "CLM-001", "CLM-002", "CLM-003", "CLM-004", "CLM-005",
+    "CLM-006", "CLM-007", "CLM-008", "CLM-009", "CLM-010",
+    "CLM-011", "CLM-013", "CLM-014"
+  ],
+  "summary": "The paper's novelty claims survive contact with the literature but require repair in two areas. (1) The claim to be the first controlled per-class ViT-vs-CNN comparison (CLM-005) is defensible but narrower than presented: Wu et al. (2401.12913, CQG 42, 165015) already report class-wise accuracy tables comparing their attention-fusion model against the legacy Gravity Spy CNN, including confusion matrices, on O4 data. The present paper's contribution is more precisely a single-view, identical-recipe, per-class-F1 comparison with statistical testing and power analysis -- not the first per-class analysis of any kind. (2) The CW veto novelty claim (CLM-006, 'first quantitative assessment') is overstated given that it is a sample-count proxy, not a PSD-weighted sensitivity analysis; the paper itself calls it 'coarse' in limitations but 'first' in the introduction. (3) A significant review article (Cuoco, Cavaglia et al., Living Reviews in Relativity 28, 2, 2025) covering ML for GW detection including glitch classification is not cited -- this is the current canonical review and CQG referees will expect it. (4) The 'forbidden-proxy' methodological lesson (CLM-011) is framed as a contribution but is well-established in the imbalanced-learning literature; missing citations to He & Garcia (2009), Buda et al. (2018), or similar weaken the framing. The core empirical finding -- class-dependent architecture preference with honest power analysis -- is genuine and not preempted by prior work. Novelty is adequate for CQG after targeted repairs.",
+  "strengths": [
+    "Core novelty claim (class-dependent architecture preference with power analysis) is not preempted by Srivastava & Niedzielski (2025) or Wu et al. (2024), which did not perform identical-recipe paired comparisons with bootstrap significance testing",
+    "Honest reporting of underpowered rare-class comparison distinguishes this work from prior ViT-for-GW papers that reported only aggregate accuracy",
+    "O4 zero-shot generalization with non-replication honestly reported -- Wu et al. (2024) trained on O4 data rather than testing zero-shot transfer, so the distribution-shift analysis is genuinely new",
+    "Temporal split methodology with random-split control is a useful methodological contribution; Zevin et al. (2024) flagged temporal leakage but did not quantify its effect on accuracy",
+    "CW veto analysis, even as a proxy, connects glitch classification to downstream science more concretely than any prior Gravity Spy architecture comparison"
+  ],
+  "findings": [
+    {
+      "issue_id": "LIT-001",
+      "claim_ids": ["CLM-005"],
+      "severity": "major",
+      "summary": "Novelty claim 'none of these studies has conducted a controlled per-class comparison' is too broad. Wu et al. (2401.12913, CQG 2025) report class-wise accuracy tables and confusion matrices comparing their attention-fusion model against the legacy CNN on both O3 and O4 data.",
+      "rationale": "The manuscript states (Sec 1, line 167-170): 'none of these studies has conducted a controlled per-class comparison under identical training conditions.' Wu et al. do report per-class metrics, though they compare a new multi-view attention architecture against the legacy Gravity Spy CNN rather than conducting an identical-recipe comparison. The present paper's novelty is more precisely: (a) single-view identical-recipe comparison, (b) paired bootstrap significance testing per class, (c) power analysis for rare classes. The current framing implies no prior per-class analysis exists, which is false.",
+      "evidence_refs": ["https://arxiv.org/abs/2401.12913", "paper/main.tex#Introduction"],
+      "manuscript_locations": ["paper/main.tex:167-170"],
+      "support_status": "partially_supported",
+      "blocking": true,
+      "required_action": "Narrow the novelty claim to specify what is new: identical-recipe paired comparison with bootstrap testing and power analysis. Acknowledge that Wu et al. (2024) reported per-class metrics (class-wise accuracy) but did not use identical training conditions or statistical testing of per-class differences."
+    },
+    {
+      "issue_id": "LIT-002",
+      "claim_ids": ["CLM-006"],
+      "severity": "major",
+      "summary": "Claiming 'first quantitative assessment of ViT vs CNN classification quality for CW search data quality' overstates a sample-count duty-cycle proxy that the paper itself labels 'coarse' in limitations.",
+      "rationale": "The introduction (line 188-190) frames this as the third contribution without qualification. The limitations section (line 647-648) acknowledges the duty-cycle metric is a coarse proxy. A 'first quantitative assessment' that uses sample counts rather than GPS-referenced segments and noise PSD is not the analysis CW practitioners would recognize as quantitative CW data quality evaluation. The claim should be downgraded to 'first exploratory comparison' or 'first proxy-level assessment' consistently throughout.",
+      "evidence_refs": ["paper/main.tex#Introduction", "paper/main.tex#Limitations"],
+      "manuscript_locations": ["paper/main.tex:188-190", "paper/main.tex:647-648"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Replace 'first quantitative assessment' with language that conveys the proxy nature upfront (e.g., 'first proxy-level comparison'), not only in limitations. Alternatively, upgrade the analysis to use GPS-referenced time segments."
+    },
+    {
+      "issue_id": "LIT-003",
+      "claim_ids": ["CLM-005", "CLM-011"],
+      "severity": "major",
+      "summary": "Missing citation: Cuoco, Cavaglia et al., 'Applications of machine learning in gravitational-wave research with current interferometric detectors,' Living Reviews in Relativity 28, 2 (2025). This is the current canonical review of ML for GW and covers glitch classification.",
+      "rationale": "This Living Reviews article is the standard reference for ML applications in GW research as of 2025. CQG referees working in detector characterization or GW data analysis will expect it. The paper cites no review articles covering the ML-for-GW landscape. Additionally, the paper cites George et al. (2018) for CNN benchmarks but not the more recent Bahaadini et al. (2018, Information Sciences) which established the Gravity Spy ML pipeline and reported per-class metrics.",
+      "evidence_refs": ["https://link.springer.com/article/10.1007/s41114-024-00055-8"],
+      "manuscript_locations": ["paper/main.tex:130-170"],
+      "support_status": "unsupported",
+      "blocking": true,
+      "required_action": "Cite Cuoco et al. (2025) Living Reviews in Relativity in the introduction when discussing ML for GW. Consider also citing Bahaadini et al. (2018) for the Gravity Spy ML pipeline."
+    },
+    {
+      "issue_id": "LIT-004",
+      "claim_ids": ["CLM-011"],
+      "severity": "minor",
+      "summary": "The 'forbidden-proxy' methodological lesson is presented as a contribution but is well-established in imbalanced-learning literature, with no citations to that literature.",
+      "rationale": "The importance of per-class evaluation under class imbalance is extensively documented (He & Garcia 2009, IEEE TKDE; Buda et al. 2018, Neural Networks; Fernandez et al. 2018, 'Learning from Imbalanced Data Sets'). The paper frames this as if it were a novel methodological insight for scientific classification. The actual contribution is demonstrating it concretely in the GW context with quantitative consequences, which is legitimate but should be framed as an application of known principles, not a discovery.",
+      "evidence_refs": ["paper/main.tex#Discussion"],
+      "manuscript_locations": ["paper/main.tex:592-607"],
+      "support_status": "supported",
+      "blocking": false,
+      "required_action": "Add 1-2 citations to the imbalanced-learning literature establishing per-class evaluation as best practice. Reframe the contribution as demonstrating this principle concretely in GW detector characterization, not discovering it."
+    },
+    {
+      "issue_id": "LIT-005",
+      "claim_ids": ["CLM-007", "CLM-008"],
+      "severity": "minor",
+      "summary": "Physical-interpretation claims about attention mechanisms lack citations to the ViT interpretability literature that would support or challenge them.",
+      "rationale": "The discussion (Sec 4.1) argues that ViT's self-attention captures multi-frequency harmonic structure benefiting Power_Line classification. There is a substantial literature on ViT attention patterns and their interpretability (Raghu et al. 2021, NeurIPS; Naseer et al. 2021) that could support or complicate this narrative. The paper does not engage with this literature. For CQG this is a minor gap since the journal audience is physics-focused, but the interpretability claims would be strengthened by grounding in the ML literature.",
+      "evidence_refs": ["paper/main.tex#Discussion"],
+      "manuscript_locations": ["paper/main.tex:523-534"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Consider citing 1-2 ViT interpretability papers to ground the attention-mechanism interpretation, or more explicitly label it as speculative throughout (not just for the rare-class case)."
+    },
+    {
+      "issue_id": "LIT-006",
+      "claim_ids": ["CLM-001", "CLM-005"],
+      "severity": "minor",
+      "summary": "Wu et al. (2401.12913) is now published in CQG (vol. 42, 165015) but the manuscript cites it as an arXiv preprint. The published version should be cited.",
+      "rationale": "The manuscript cites Wu et al. as 'arXiv:2401.12913' but this paper has been published in Classical and Quantum Gravity, the same target journal. CQG referees will notice the outdated citation. Additionally, the published version may contain updated per-class results that affect the novelty comparison.",
+      "evidence_refs": ["paper/main.tex:774-777"],
+      "manuscript_locations": ["paper/main.tex:774-777"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Update the Wu et al. citation to the published CQG version and verify whether the published version contains per-class analysis that further narrows the novelty claim."
+    }
+  ],
+  "confidence": "high",
+  "recommendation_ceiling": "major_revision"
+}

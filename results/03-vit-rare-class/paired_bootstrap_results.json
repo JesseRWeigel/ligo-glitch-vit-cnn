@@ -1,0 +1,37 @@
+{
+  "rare_class_macro_f1": {
+    "point_estimate_difference": -0.06167270453503035,
+    "ci_lower": -0.1462819573982351,
+    "ci_upper": 0.040782760379131755,
+    "p_value": 0.8842,
+    "n_resamples": 10000,
+    "vit_rare_f1": 0.2411595394736842,
+    "cnn_rare_f1": 0.30283224400871456,
+    "rare_classes": [
+      "Chirp",
+      "Wandering_Line",
+      "Helix",
+      "Light_Modulation"
+    ],
+    "rare_class_indices": [
+      5,
+      21,
+      8,
+      10
+    ],
+    "h0": "ViT rare-class macro-F1 <= CNN rare-class macro-F1",
+    "test_type": "one-sided paired percentile bootstrap"
+  },
+  "overall_macro_f1": {
+    "point_estimate_difference": 0.044391085161930244,
+    "ci_lower": 0.02104339056762776,
+    "ci_upper": 0.06752668546778001,
+    "p_value": 0.0002,
+    "n_resamples": 10000,
+    "vit_macro_f1": 0.723037755055069,
+    "cnn_macro_f1": 0.6786466698931387
+  },
+  "n_test_samples": 48845,
+  "test_manifest_hash": "c8f3865d1bf36e1c435b05329bcddb32d5994b65314a824409758aa7492f5124",
+  "seed": 42
+}

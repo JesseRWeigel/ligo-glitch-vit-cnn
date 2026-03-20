@@ -1,0 +1,20 @@
+\begin{table*}
+\centering
+\caption{CW-critical glitch class analysis on O4 data. Duty cycle (DC) is the fraction of observation time retained after vetoing glitches of each class. $\Delta_\mathrm{DC} = \mathrm{DC}_\mathrm{ViT} - \mathrm{DC}_\mathrm{CNN}$; negative values indicate CNN retains more livetime. F1~Adv indicates which model achieves higher per-class F1 on O4 data; DC~Adv indicates which model retains more observation time (based on sign of $\Delta_\mathrm{DC}$). These can disagree when a model classifies a class more accurately but with lower confidence scores, leading to more aggressive vetoing.}
+\label{tab:cw}
+\begin{tabular}{llrrrrll}
+\hline\hline
+Class & CW impact & $N_\mathrm{O4}$ & ViT DC & CNN DC & $\Delta_\mathrm{DC}$ & F1 Adv & DC Adv \\
+\hline
+Low\_Frequency\_Lines & HIGH & 3000 & 0.876 & 0.903 & $-$0.0264 [$-$0.0282, $-$0.0246] & CNN & CNN \\
+Scattered\_Light & HIGH & 3000 & 0.964 & 0.975 & $-$0.0112 [$-$0.0126, $-$0.0098] & CNN & CNN \\
+Violin\_Mode & HIGH & 127 & 0.993 & 0.997 & $-$0.0043 [$-$0.0051, $-$0.0034] & ViT & CNN \\
+Power\_Line & MEDIUM & 1290 & 0.981 & 0.996 & $-$0.0144 [$-$0.0157, $-$0.0132] & ViT & CNN \\
+1080Lines & MEDIUM & 43 & 0.998 & 0.999 & $-$0.0007 [$-$0.0009, $-$0.0004] & CNN & CNN \\
+Low\_Frequency\_Burst & LOW-MEDIUM & 3000 & 0.934 & 0.928 & $+$0.0057 [$+$0.0046, $+$0.0068] & CNN & ViT \\
+Whistle & MEDIUM & 881 & 0.991 & 0.991 & $+$0.0004 [$-$0.0004, $+$0.0012] & CNN & --- \\
+\hline
+\textbf{Combined} & ALL & --- & 0.738 & 0.788 & $-$0.051 [$-$0.054, $-$0.048] & --- & CNN \\
+\hline\hline
+\end{tabular}
+\end{table*}

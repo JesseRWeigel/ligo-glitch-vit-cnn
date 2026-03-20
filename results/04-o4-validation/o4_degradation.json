@@ -1,0 +1,16 @@
+{
+  "cnn_macro_f1_o3": 0.6786466698931387,
+  "vit_macro_f1_o3": 0.723037755055069,
+  "cnn_macro_f1_o4": 0.6673603104855854,
+  "vit_macro_f1_o4": 0.6694683073621721,
+  "cnn_degradation_absolute": -0.011286359407553292,
+  "vit_degradation_absolute": -0.05356944769289684,
+  "cnn_degradation_relative": 0.016630685610422975,
+  "vit_degradation_relative": 0.07408941969955195,
+  "cnn_passes_20pct_threshold": true,
+  "vit_passes_20pct_threshold": true,
+  "cnn_classes_improved_on_o4": 11,
+  "vit_classes_improved_on_o4": 5,
+  "cnn_label_bias_flag": false,
+  "vit_label_bias_flag": false
+}

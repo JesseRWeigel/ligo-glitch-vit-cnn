@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "round": 1,
+  "stage_id": "math",
+  "stage_kind": "math",
+  "manuscript_path": "paper/main.tex",
+  "manuscript_sha256": "0780ee5f89b8af1949aa7e802c7919c671ae2eefa8cac2066fa563f0cb5ddcfe",
+  "claims_reviewed": [
+    "CLM-001", "CLM-002", "CLM-003", "CLM-004", "CLM-006", "CLM-009", "CLM-010", "CLM-012"
+  ],
+  "summary": "The paper contains no derivations or analytic equations in the traditional physics sense; its mathematical content consists of metric definitions (macro-F1), statistical tests (paired bootstrap, Spearman correlation, power analysis), and duty-cycle arithmetic. I independently recomputed all key quantities from the source JSON and found them internally consistent with one exception: the ViT O4 macro-F1 value (0.6694683) is reported as 0.670 in the paper, but correct 3-decimal-place rounding gives 0.669 -- a double-rounding error propagated through the verification chain. All other numbers (macro-F1, rare-class F1, per-class differences, CI ordering, dataset totals, CW duty cycles, Spearman correlations) check out to machine precision. The power analysis methodology is sound but the paper conflates two different 'rare class' definitions (4 classes with n_train < 200 vs. 8 classes tested in the power analysis). The CW combined duty cycle is correctly computed as a union-based veto (not an independence-assuming product), and the sign convention (ViT minus CNN) is consistent throughout.",
+  "strengths": [
+    "All 23 per-class F1 differences recompute exactly from stored per-class F1 values (0/23 mismatches)",
+    "Macro-F1 = mean(per-class F1) verified to machine precision for both models on both O3 and O4",
+    "Bootstrap CI ordering (lower < point < upper) verified for all 6 primary confidence intervals",
+    "Dataset partition sums verified: n_train + n_val + n_test = n_total = 325,632; split fractions match 70/15/15 targets exactly",
+    "CW delta_DC sign convention (ViT minus CNN) is consistent across all 7 per-class rows, the combined row, the text, and the ASSERT_CONVENTION header",
+    "Power analysis methodology (simulation-based with permutation critical values) is appropriate for F1 on tiny samples where parametric assumptions fail; independently cross-checked via analytical derivation for 1080Lines"
+  ],
+  "findings": [
+    {
+      "issue_id": "MATH-001",
+      "claim_ids": ["CLM-009"],
+      "severity": "minor",
+      "summary": "ViT O4 macro-F1 reported as 0.670 but correct 3dp rounding of 0.6694683 gives 0.669 -- a double-rounding error",
+      "rationale": "The source JSON stores ViT O4 macro-F1 = 0.6694683073621721. Standard rounding (round-half-up or round-half-even) to 3 decimal places gives 0.669, since the 4th digit is 4 (< 5). The paper and LaTeX macro both use 0.670. The Phase 07 verification claimed Decimal ROUND_HALF_UP on '0.6695' yields 0.670, but 0.6695 is itself an intermediate rounding of 0.66947 to 4dp -- classic double-rounding. The error is +0.001 (1 unit in the last displayed digit). It does not change any qualitative conclusion: ViT O4 macro-F1 (0.669) and CNN O4 macro-F1 (0.667) remain very close, and the gap narrows slightly from 0.003 to 0.002.",
+      "evidence_refs": [
+        "paper/data/paper_numbers.json:o4_vit.macro_f1",
+        "paper/main.tex:55",
+        "paper/tables/table_overall.tex:11"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:55",
+        "paper/tables/table_overall.tex:11"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Correct \\vitMacroFOfour from 0.670 to 0.669 in paper/main.tex and update table_overall.tex row for O4 ViT accordingly."
+    },
+    {
+      "issue_id": "MATH-002",
+      "claim_ids": ["CLM-003"],
+      "severity": "minor",
+      "summary": "Paper text says 'all 8 rare classes are underpowered' but defines rare as n_train < 200 (only 4 classes); the power analysis tested 8 classes including non-rare ones (1080Lines n_train=341, Air_Compressor n_train=1361, 1400Ripples n_train=2428, Power_Line n_train=1582)",
+      "rationale": "Section 3.1 (line ~354) states 'all 8 rare classes are underpowered to detect the observed -0.062 macro-F1 difference'. Section 2.1 (line ~227) defines rare as n_train < 200, yielding exactly 4 classes. The power analysis JSON confirms it tested 8 classes: the 4 rare plus 4 others with small test sets. The '8 rare classes' phrasing applies 'rare' to classes that the paper's own definition excludes. The aggregate power = 0.20 figure is computed over these 8 classes, not over the 4 rare classes. This is not a computational error but a labeling inconsistency that could mislead a reader about which classes are underpowered.",
+      "evidence_refs": [
+        "paper/main.tex:227-228",
+        "paper/main.tex:354-357",
+        "results/06-computation-statistical-analysis/power_analysis.json"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:354"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Either (a) change 'all 8 rare classes' to 'all 8 classes with small test sets (n_test <= 56)' or similar precise language, distinguishing from the n_train < 200 rare definition, or (b) explicitly state that the power analysis was extended beyond the 4 rare classes to include 4 additional classes with small test sets."
+    },
+    {
+      "issue_id": "MATH-003",
+      "claim_ids": ["CLM-010"],
+      "severity": "minor",
+      "summary": "CW per-class delta_DC values show O(1e-4) discrepancies between vit_dc - cnn_dc and stored delta_dc for all 7 classes",
+      "rationale": "For each CW-critical class, recomputing delta_dc = vit_dc - cnn_dc from the stored per-class duty cycles yields values that differ from the stored delta_dc by up to ~6e-4 (e.g., Low_Frequency_Lines: recomputed -0.02641 vs stored -0.02640). This is consistent with the stored delta_dc being a bootstrap mean rather than a direct difference of point estimates, which is a valid statistical choice. However, the paper does not state which estimator is used for delta_DC. The discrepancy does not affect any reported 4dp value in the tables. The combined DC is correctly computed as a union-based veto (not a product of per-class DCs), which is physically appropriate since glitch classes can overlap in time.",
+      "evidence_refs": [
+        "paper/data/paper_numbers.json:cw_per_class",
+        "paper/tables/table_cw.tex"
+      ],
+      "manuscript_locations": [
+        "paper/tables/table_cw.tex:9-16"
+      ],
+      "support_status": "supported",
+      "blocking": false,
+      "required_action": "No correction needed. Optionally, a footnote could clarify that delta_DC is a bootstrap mean rather than the difference of point DC estimates."
+    },
+    {
+      "issue_id": "MATH-004",
+      "claim_ids": ["CLM-002", "CLM-003"],
+      "severity": "suggestion",
+      "summary": "Paired bootstrap p-value for rare-class comparison (p=0.884) is one-sided (ViT > CNN) but the rare-class effect is in the opposite direction; should be two-sided or stated as such",
+      "rationale": "Table 1 caption states 'p-values from paired percentile bootstrap (one-sided: ViT > CNN)'. For the rare-class row, the observed difference is negative (ViT rare F1 = 0.241 < CNN rare F1 = 0.303), so a one-sided test of ViT > CNN would give p near 1.0 (stored as 0.884). A two-sided test would give p = 2 * min(p, 1-p) = 2 * 0.116 = 0.232, still non-significant. The one-sided test is formally correct given the stated alternative hypothesis, but it is somewhat unusual to use a one-sided test when the effect goes in the opposite direction. The non-significance conclusion is robust to the choice of one-sided vs two-sided test.",
+      "evidence_refs": [
+        "paper/tables/table_overall.tex:3",
+        "paper/data/paper_numbers.json:paired_bootstrap"
+      ],
+      "manuscript_locations": [
+        "paper/tables/table_overall.tex:10"
+      ],
+      "support_status": "supported",
+      "blocking": false,
+      "required_action": "Consider switching to a two-sided test for the rare-class comparison, or adding a note that the one-sided p near 1.0 reflects the effect being in the opposite direction to the alternative hypothesis."
+    },
+    {
+      "issue_id": "MATH-005",
+      "claim_ids": ["CLM-004"],
+      "severity": "suggestion",
+      "summary": "Spearman correlation test has low statistical power with n=23 classes; absence of significance should not be overinterpreted as absence of correlation",
+      "rationale": "The Spearman test uses 23 data points (one per class). For rho=-0.119 on O3 and rho=-0.034 on O4, a sample of n=23 has power of roughly 0.08 to detect rho=-0.12 at alpha=0.05 (approximate formula: power = Phi(|rho|*sqrt(n-1) - z_alpha)). The paper correctly reports non-significance but phrases it as 'architecture preference is NOT a monotonic function of sample size'. The correct interpretation is 'we found no significant evidence of a monotonic relationship', which is weaker. The paper's Section 3.3 heading ('Architecture Preference Is Not a Monotonic Function of Sample Size') states the absence of correlation as a positive finding rather than a failure to detect.",
+      "evidence_refs": [
+        "paper/main.tex:389-398",
+        "paper/data/paper_numbers.json:threshold_test"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:389"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Consider softening the section heading to 'No evidence that architecture preference is a monotonic function of sample size' or similar language that distinguishes absence of evidence from evidence of absence."
+    }
+  ],
+  "equations_checked": [
+    {
+      "id": "EQ-1",
+      "description": "Macro-F1 = (1/C) * sum(F1_c) for C=23",
+      "location": "paper/main.tex:262-264",
+      "check": "Recomputed from 23 per-class F1 values in paper_numbers.json",
+      "status": "pass",
+      "details": "CNN: 0.678647 (exact match), ViT: 0.723038 (exact match)"
+    },
+    {
+      "id": "EQ-2",
+      "description": "Delta macro-F1 = ViT macro-F1 - CNN macro-F1",
+      "location": "paper/main.tex:699",
+      "check": "0.723038 - 0.678647 = 0.044391, matches stored 0.044391",
+      "status": "pass",
+      "details": "Exact match to machine precision"
+    },
+    {
+      "id": "EQ-3",
+      "description": "Rare-class macro-F1 = mean of F1 over 4 rare classes",
+      "location": "paper/main.tex:367-370",
+      "check": "Recomputed from per-class F1 for Chirp, Wandering_Line, Helix, Light_Modulation",
+      "status": "pass",
+      "details": "CNN: 0.302832, ViT: 0.241160, diff: -0.061673 -- all exact matches"
+    },
+    {
+      "id": "EQ-4",
+      "description": "O4 relative degradation = |F1_O4 - F1_O3| / F1_O3",
+      "location": "paper/tables/table_overall.tex:12",
+      "check": "CNN: |-0.01129|/0.6787 = 1.66%, ViT: |-0.05357|/0.7230 = 7.41%",
+      "status": "pass",
+      "details": "Matches stored values and paper text (1.7% and 7.4% at 1dp)"
+    },
+    {
+      "id": "EQ-5",
+      "description": "CW delta_DC = DC_ViT - DC_CNN (combined, union-based)",
+      "location": "paper/tables/table_cw.tex:17",
+      "check": "Stored: -0.05088, paper: -0.051. Sign convention consistent throughout.",
+      "status": "pass",
+      "details": "Combined DC is union-based (not product of per-class DCs); delta correctly negative indicating CNN retains more livetime"
+    }
+  ],
+  "unchecked_areas": [
+    {
+      "area": "Bootstrap implementation correctness",
+      "reason": "The bootstrap resampling code (10K paired percentile bootstrap) was not re-executed from scratch; only the stored outputs were cross-checked for internal consistency. A subtle bug in the pairing or resampling logic would not be caught.",
+      "risk": "low",
+      "mitigation": "Phase 06 verification independently confirmed analytical cross-checks for 1080Lines power values within simulation noise"
+    },
+    {
+      "area": "Focal loss and class-balanced sampling interaction",
+      "reason": "The paper uses focal loss (gamma=2.0) with class-balanced sampling and label smoothing (epsilon=0.1) simultaneously. The interaction of these three regularization mechanisms is not analyzed; it is possible that one dominates or that they partially cancel. No ablation of these choices is provided.",
+      "risk": "low-medium",
+      "mitigation": "This is standard practice in the applied ML literature; the paper does not claim these choices are optimal, only that they are held constant across models"
+    },
+    {
+      "area": "Confusion matrix aggregation to F1",
+      "reason": "Per-class F1 values are taken from sklearn and not independently recomputed from the confusion matrix entries. A mislabeled axis or transposed matrix would propagate silently.",
+      "risk": "low",
+      "mitigation": "The n_test sums check (48,845 = dataset n_test) provides a necessary but not sufficient consistency check"
+    },
+    {
+      "area": "CW veto efficiency computation at matched deadtime",
+      "reason": "Phase 04 verification found and fixed a np.interp boundary-clamping bug in the original '5% deadtime' comparison. The current matched-deadtime (22.4%) comparison was implemented as the fix. I did not re-execute this computation; I verified only that the stored numbers are internally consistent.",
+      "risk": "low",
+      "mitigation": "The matched-deadtime approach is conceptually sound and the Phase 04 verification documented the fix in detail"
+    },
+    {
+      "area": "Single-seed training stochasticity",
+      "reason": "All results depend on a single training run (seed=42) for each model. Per-class F1 for tiny test sets (Chirp n=7, Wandering_Line n=6, 1080Lines n=6) could change substantially with a different seed. This is a methodological limitation, not a mathematical error, but it affects the reliability of the numerical values.",
+      "risk": "medium",
+      "mitigation": "Paper acknowledges this in limitations section; bootstrap CIs partially capture test-set uncertainty but not training stochasticity"
+    }
+  ],
+  "confidence": "high",
+  "recommendation_ceiling": "minor_revision"
+}

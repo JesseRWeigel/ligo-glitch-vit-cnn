@@ -1,0 +1,463 @@
+{
+  "per_class": {
+    "Chirp": {
+      "n_test": 7,
+      "observed_cnn_recall": 0.5714,
+      "effective_cnn_recall": 0.5714,
+      "minimum_detectable_effect": Infinity,
+      "power_at_observed_effect": 0.034783999999999995,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.0302
+        },
+        {
+          "delta": 0.1,
+          "power": 0.0493
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.0694
+        },
+        {
+          "delta": 0.2,
+          "power": 0.1043
+        },
+        {
+          "delta": 0.25,
+          "power": 0.1472
+        },
+        {
+          "delta": 0.3,
+          "power": 0.2107
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.2701
+        },
+        {
+          "delta": 0.4,
+          "power": 0.3771
+        },
+        {
+          "delta": 0.45,
+          "power": 0.4863
+        },
+        {
+          "delta": 0.5,
+          "power": 0.634
+        }
+      ],
+      "critical_value": 0.47863247863247854
+    },
+    "Wandering_Line": {
+      "n_test": 6,
+      "observed_cnn_recall": 0.0,
+      "effective_cnn_recall": 0.3,
+      "minimum_detectable_effect": Infinity,
+      "power_at_observed_effect": 0.017192,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.0152
+        },
+        {
+          "delta": 0.1,
+          "power": 0.0235
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.0271
+        },
+        {
+          "delta": 0.2,
+          "power": 0.0351
+        },
+        {
+          "delta": 0.25,
+          "power": 0.0508
+        },
+        {
+          "delta": 0.3,
+          "power": 0.0708
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.0699
+        },
+        {
+          "delta": 0.4,
+          "power": 0.0739
+        },
+        {
+          "delta": 0.45,
+          "power": 0.0705
+        },
+        {
+          "delta": 0.5,
+          "power": 0.0726
+        }
+      ],
+      "critical_value": 0.6666666666666666
+    },
+    "1080Lines": {
+      "n_test": 6,
+      "observed_cnn_recall": 1.0,
+      "effective_cnn_recall": 1.0,
+      "minimum_detectable_effect": 0.25,
+      "power_at_observed_effect": 0.31002,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.2619
+        },
+        {
+          "delta": 0.1,
+          "power": 0.4624
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.6147
+        },
+        {
+          "delta": 0.2,
+          "power": 0.736
+        },
+        {
+          "delta": 0.25,
+          "power": 0.8188
+        },
+        {
+          "delta": 0.3,
+          "power": 0.8766
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.922
+        },
+        {
+          "delta": 0.4,
+          "power": 0.9561
+        },
+        {
+          "delta": 0.45,
+          "power": 0.9721
+        },
+        {
+          "delta": 0.5,
+          "power": 0.9834
+        }
+      ],
+      "critical_value": 0.0
+    },
+    "Helix": {
+      "n_test": 14,
+      "observed_cnn_recall": 0.2857,
+      "effective_cnn_recall": 0.2857,
+      "minimum_detectable_effect": Infinity,
+      "power_at_observed_effect": 0.056527999999999995,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.0482
+        },
+        {
+          "delta": 0.1,
+          "power": 0.0829
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.1358
+        },
+        {
+          "delta": 0.2,
+          "power": 0.2412
+        },
+        {
+          "delta": 0.25,
+          "power": 0.4235
+        },
+        {
+          "delta": 0.3,
+          "power": 0.5991
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.6064
+        },
+        {
+          "delta": 0.4,
+          "power": 0.5965
+        },
+        {
+          "delta": 0.45,
+          "power": 0.6021
+        },
+        {
+          "delta": 0.5,
+          "power": 0.6006
+        }
+      ],
+      "critical_value": 0.41666666666666663
+    },
+    "Light_Modulation": {
+      "n_test": 66,
+      "observed_cnn_recall": 0.8485,
+      "effective_cnn_recall": 0.8485,
+      "minimum_detectable_effect": 0.2,
+      "power_at_observed_effect": 0.19977199999999998,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.1397
+        },
+        {
+          "delta": 0.1,
+          "power": 0.39
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.6759
+        },
+        {
+          "delta": 0.2,
+          "power": 0.883
+        },
+        {
+          "delta": 0.25,
+          "power": 0.9668
+        },
+        {
+          "delta": 0.3,
+          "power": 0.993
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.9991
+        },
+        {
+          "delta": 0.4,
+          "power": 0.9998
+        },
+        {
+          "delta": 0.45,
+          "power": 0.9998
+        },
+        {
+          "delta": 0.5,
+          "power": 1.0
+        }
+      ],
+      "critical_value": 0.07341490545050056
+    },
+    "Air_Compressor": {
+      "n_test": 47,
+      "observed_cnn_recall": 0.1489,
+      "effective_cnn_recall": 0.1489,
+      "minimum_detectable_effect": Infinity,
+      "power_at_observed_effect": 0.13207999999999998,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.0884
+        },
+        {
+          "delta": 0.1,
+          "power": 0.2704
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.7128
+        },
+        {
+          "delta": 0.2,
+          "power": 0.7174
+        },
+        {
+          "delta": 0.25,
+          "power": 0.7229
+        },
+        {
+          "delta": 0.3,
+          "power": 0.7186
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.7234
+        },
+        {
+          "delta": 0.4,
+          "power": 0.7198
+        },
+        {
+          "delta": 0.45,
+          "power": 0.7221
+        },
+        {
+          "delta": 0.5,
+          "power": 0.7245
+        }
+      ],
+      "critical_value": 0.22244759972954697
+    },
+    "1400Ripples": {
+      "n_test": 33,
+      "observed_cnn_recall": 0.9697,
+      "effective_cnn_recall": 0.9697,
+      "minimum_detectable_effect": 0.15000000000000002,
+      "power_at_observed_effect": 0.31034799999999996,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.2305
+        },
+        {
+          "delta": 0.1,
+          "power": 0.5632
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.8209
+        },
+        {
+          "delta": 0.2,
+          "power": 0.9409
+        },
+        {
+          "delta": 0.25,
+          "power": 0.9819
+        },
+        {
+          "delta": 0.3,
+          "power": 0.9939
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.9986
+        },
+        {
+          "delta": 0.4,
+          "power": 0.9997
+        },
+        {
+          "delta": 0.45,
+          "power": 1.0
+        },
+        {
+          "delta": 0.5,
+          "power": 1.0
+        }
+      ],
+      "critical_value": 0.04761904761904767
+    },
+    "Power_Line": {
+      "n_test": 56,
+      "observed_cnn_recall": 0.25,
+      "effective_cnn_recall": 0.25,
+      "minimum_detectable_effect": 0.2,
+      "power_at_observed_effect": 0.140732,
+      "power_curve": [
+        {
+          "delta": 0.05,
+          "power": 0.1013
+        },
+        {
+          "delta": 0.1,
+          "power": 0.2656
+        },
+        {
+          "delta": 0.15000000000000002,
+          "power": 0.5651
+        },
+        {
+          "delta": 0.2,
+          "power": 0.8593
+        },
+        {
+          "delta": 0.25,
+          "power": 0.9939
+        },
+        {
+          "delta": 0.3,
+          "power": 0.9942
+        },
+        {
+          "delta": 0.35000000000000003,
+          "power": 0.9924
+        },
+        {
+          "delta": 0.4,
+          "power": 0.9929
+        },
+        {
+          "delta": 0.45,
+          "power": 0.9943
+        },
+        {
+          "delta": 0.5,
+          "power": 0.9923
+        }
+      ],
+      "critical_value": 0.20546688680975966
+    }
+  },
+  "aggregate_rare": {
+    "n_classes": 8,
+    "mde": 0.2,
+    "power_at_observed": 0.203084,
+    "power_curve": [
+      {
+        "delta": 0.05,
+        "power": 0.1361
+      },
+      {
+        "delta": 0.1,
+        "power": 0.4152
+      },
+      {
+        "delta": 0.15000000000000002,
+        "power": 0.7764
+      },
+      {
+        "delta": 0.2,
+        "power": 0.9468
+      },
+      {
+        "delta": 0.25,
+        "power": 0.9938
+      },
+      {
+        "delta": 0.3,
+        "power": 0.9997
+      },
+      {
+        "delta": 0.35000000000000003,
+        "power": 1.0
+      },
+      {
+        "delta": 0.4,
+        "power": 1.0
+      },
+      {
+        "delta": 0.45,
+        "power": 1.0
+      },
+      {
+        "delta": 0.5,
+        "power": 1.0
+      }
+    ],
+    "critical_value": 0.11577220649652054
+  },
+  "methodology": "simulation-based, 10000 iterations, alpha=0.05, paired permutation test",
+  "observed_effect": -0.062,
+  "seed": 42,
+  "sanity_check": {
+    "n_test": 100,
+    "recall": 0.8,
+    "delta": 0.4,
+    "power": 1.0,
+    "expected": ">0.90"
+  },
+  "conclusion": "underpowered: 4/4 smallest rare classes have power < 0.8 at the observed effect size (-0.062). The rare-class ViT-vs-CNN comparison lacks sufficient statistical evidence."
+}

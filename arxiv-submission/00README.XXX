@@ -1,0 +1,3 @@
+main.tex       -- Main LaTeX file (all inputs flattened, bibliography inlined)
+figures/       -- PDF figure files (5 figures)
+anc/           -- Ancillary files: training and evaluation scripts

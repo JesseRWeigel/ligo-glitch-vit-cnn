@@ -1,0 +1,17 @@
+\begin{table}
+\centering
+\caption{Overall classification performance. Macro-F1 (primary metric) with 95\% bootstrap CIs (10\,000 resamples). $p$-values from paired percentile bootstrap (one-sided: ViT $>$ CNN).}
+\label{tab:overall}
+\begin{tabular}{llccc}
+\hline\hline
+Dataset & Metric & CNN & ViT & $p$-value \\
+\hline
+O3 & Macro-F1 (all) & 0.679 [0.660, 0.694] & 0.723 [0.703, 0.740] & 0.0002 \\
+O3 & Macro-F1 (rare) & 0.303 [0.208, 0.375] & 0.241 [0.202, 0.296] & 0.884$^{a}$ \\  % REVISED: REF-012
+O4 & Macro-F1 (all) & 0.667 [0.657, 0.677] & 0.670 [0.656, 0.682] & --- \\
+O3$\to$O4 & Degradation & 1.7\% & 7.4\% & --- \\
+\hline\hline
+\end{tabular}
+\smallskip  % REVISED: REF-012
+\noindent{\footnotesize $^{a}$One-sided test (H$_1$: ViT $>$ CNN); two-sided $p = 0.232$. Both non-significant.}
+\end{table}

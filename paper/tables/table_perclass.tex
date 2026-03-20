@@ -1,0 +1,34 @@
+\begin{table*}
+\centering
+\caption{Per-class F1 scores on the O3 test set for all 23 classes, sorted by training set size. Bold indicates the better model per class. Rare classes ($N_\mathrm{train} < 200$) are marked with $\dagger$.}
+\label{tab:perclass}
+\begin{tabular}{lrrrrrl}
+\hline\hline
+Class & $N_\mathrm{train}$ & $N_\mathrm{test}$ & CNN F1 & ViT F1 & $\Delta$F1 & Winner \\
+\hline
+Chirp$^\dagger$ & 11 & 7 & \textbf{0.471} & 0.000 & -0.471 & CNN \\
+Wandering\_Line$^\dagger$ & 30 & 6 & 0.000 & 0.000 & 0.000 & Tie \\
+Helix$^\dagger$ & 33 & 14 & 0.049 & \textbf{0.105} & 0.056 & ViT \\
+Light\_Modulation$^\dagger$ & 142 & 66 & 0.691 & \textbf{0.859} & 0.168 & ViT \\
+Paired\_Doves & 216 & 64 & 0.099 & \textbf{0.613} & 0.514 & ViT \\
+Violin\_Mode & 274 & 397 & \textbf{0.683} & 0.544 & -0.139 & CNN \\
+1080Lines & 341 & 6 & \textbf{1.000} & 0.706 & -0.294 & CNN \\
+Scratchy & 558 & 76 & 0.503 & \textbf{0.875} & 0.372 & ViT \\
+Repeating\_Blips & 1061 & 347 & 0.770 & \textbf{0.835} & 0.065 & ViT \\
+Air\_Compressor & 1361 & 47 & 0.154 & \textbf{0.474} & 0.320 & ViT \\
+Power\_Line & 1582 & 56 & 0.235 & \textbf{0.742} & 0.507 & ViT \\
+1400Ripples & 2428 & 33 & 0.800 & \textbf{0.805} & 0.005 & ViT \\
+Low\_Frequency\_Lines & 2853 & 1743 & \textbf{0.701} & 0.615 & -0.086 & CNN \\
+Whistle & 6299 & 3689 & 0.963 & \textbf{0.963} & 0.001 & ViT \\
+Blip & 7156 & 2105 & 0.949 & \textbf{0.977} & 0.028 & ViT \\
+No\_Glitch & 11568 & 402 & 0.936 & \textbf{0.938} & 0.001 & ViT \\
+Koi\_Fish & 11950 & 2503 & 0.957 & \textbf{0.960} & 0.004 & ViT \\
+Extremely\_Loud & 13469 & 3317 & \textbf{0.986} & 0.985 & -0.001 & CNN \\
+Blip\_Low\_Frequency & 13659 & 2763 & 0.938 & \textbf{0.963} & 0.025 & ViT \\
+Low\_Frequency\_Burst & 19834 & 2397 & \textbf{0.991} & 0.983 & -0.008 & CNN \\
+Tomte & 30403 & 5651 & 0.963 & \textbf{0.983} & 0.020 & ViT \\
+Fast\_Scattering & 34555 & 18998 & 0.957 & \textbf{0.984} & 0.027 & ViT \\
+Scattered\_Light & 68160 & 4158 & \textbf{0.811} & 0.719 & -0.092 & CNN \\
+\hline\hline
+\end{tabular}
+\end{table*}

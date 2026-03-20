@@ -1,0 +1,57 @@
+======================================================================
+ABLATION AND POWER ANALYSIS SUMMARY
+Phase 6: Computation & Statistical Analysis
+======================================================================
+
+----------------------------------------------------------------------
+SECTION 1: Random-Split Ablation
+----------------------------------------------------------------------
+  Split method:           Stratified random (seed=42)
+  Overall accuracy:       0.9544 [0.9525, 0.9563]
+  Macro-F1:               0.7507 [0.7273, 0.7716]
+  Temporal-split accuracy: 0.9181
+  Temporal-split macro-F1: 0.6786
+  Accuracy gap:           +3.63 pp
+  Published range:        [0.95, 0.99]
+  Best epoch:             6
+  Training time:          53.8 min
+
+  INTERPRETATION: The temporal split -- not a pipeline deficiency --
+  explains the gap between our 91.81% accuracy and published Gravity Spy
+  benchmarks (95-99%). Random-split accuracy (95.4%)
+  falls within or near the published range.
+
+----------------------------------------------------------------------
+SECTION 2: Power Analysis for Rare-Class Comparison
+----------------------------------------------------------------------
+  Observed rare-class macro-F1 diff (ViT - CNN): -0.062
+  Significance level: alpha = 0.05
+  Power threshold: 0.8
+  Simulation iterations: 10000
+
+  Class                n_test CNN recall      MDE  Power@obs
+  ----------------------------------------------------------
+  1080Lines                 6     1.0000     0.25     0.3100
+  1400Ripples              33     0.9697     0.15     0.3103
+  Air_Compressor           47     0.1489    >0.50     0.1321
+  Chirp                     7     0.5714    >0.50     0.0348
+  Helix                    14     0.2857    >0.50     0.0565
+  Light_Modulation         66     0.8485     0.20     0.1998
+  Power_Line               56     0.2500     0.20     0.1407
+  Wandering_Line            6     0.0000    >0.50     0.0172
+
+  Aggregate rare-class MDE: 0.20
+  Aggregate rare-class power at observed effect: 0.2031
+
+----------------------------------------------------------------------
+SECTION 3: Interpretation
+----------------------------------------------------------------------
+  8 of 8 rare classes are underpowered
+  (power < 0.8) to detect the observed -0.062 macro-F1
+  difference at alpha=0.05.
+
+  CONCLUSION: The rare-class comparison is UNDERPOWERED. The observed
+  ViT underperformance on rare classes should be reframed as
+  'insufficient statistical evidence' rather than a definitive finding.
+
+======================================================================

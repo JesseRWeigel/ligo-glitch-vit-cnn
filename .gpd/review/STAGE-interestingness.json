@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "round": 1,
+  "stage_id": "interestingness",
+  "stage_kind": "interestingness",
+  "manuscript_path": "paper/main.tex",
+  "manuscript_sha256": "0780ee5f89b8af1949aa7e802c7919c671ae2eefa8cac2066fa563f0cb5ddcfe",
+  "claims_reviewed": [
+    "CLM-001", "CLM-002", "CLM-003", "CLM-004", "CLM-005",
+    "CLM-006", "CLM-007", "CLM-008", "CLM-009", "CLM-010",
+    "CLM-011", "CLM-013", "CLM-014"
+  ],
+  "summary": "The paper is technically competent and honest about its statistical limitations, but the actual scientific advance is thin for CQG. The central finding -- that ViT-vs-CNN preference varies by glitch class -- is empirically demonstrated on O3 data but is not surprising (different architectures have different inductive biases; this is expected, not discovered), does not replicate predictively on O4, and the paper cannot explain why the pattern holds beyond post-hoc speculation about attention mechanisms. The contribution is better characterized as a useful applied-ML benchmark with good statistical hygiene than as a paper that advances gravitational-wave physics or detector characterization methodology. For CQG, which expects contributions to be 'of sufficient scientific quality and interest' to the GW/relativity community, the paper is on the border: it is adequate if the claims are properly scaled down, but it currently oversells the significance of its class-dependent finding and undersells the CW duty-cycle result where CNN wins. After the major revisions flagged by earlier stages (rare-class overclaiming, missing citations, CW framing), the paper could meet the CQG bar as a detector-characterization methods paper -- but it is not a strong contribution and would not survive at a more selective venue.",
+  "strengths": [
+    "Statistical honesty is genuinely above the field standard: power analysis for rare classes, explicit underpowering acknowledgment, paired bootstrap testing, and temporal split validation are all practices that most GW ML papers omit",
+    "The CW veto analysis, despite being proxy-level, connects glitch classification to downstream science in a way that prior Gravity Spy architecture comparisons did not -- this is the most publishable aspect of the paper for CQG",
+    "The O4 non-replication result is honest and scientifically informative: it demonstrates that O3-calibrated per-class preferences are run-specific, which is a practically useful negative result for the detector characterization community",
+    "The temporal split methodology and random-split control quantify the effect of data leakage on accuracy benchmarks -- this is a methodological contribution that CQG readers doing detector characterization ML will find useful"
+  ],
+  "findings": [
+    {
+      "issue_id": "SIG-001",
+      "claim_ids": ["CLM-001", "CLM-005"],
+      "severity": "major",
+      "summary": "The central finding -- class-dependent architecture preference -- is empirically true but not scientifically surprising or predictively useful, making it a weak anchor for a journal paper.",
+      "rationale": "That different neural network architectures perform differently on different sub-tasks of a classification problem is a well-known property of inductive biases in deep learning. The paper does not advance this understanding: it observes that ViT is better on some classes and CNN on others, but cannot predict which classes will favor which architecture (the Spearman test is non-significant and the pattern does not replicate on O4). The contribution is therefore descriptive (here is what happened on this dataset) rather than explanatory or predictive. For CQG, this is publishable as a benchmark/methods paper if the claims are scaled to match, but the current framing ('central result', 'contributions') oversells a descriptive finding as if it were an insight. The paper's own negative result (CLM-004, CLM-014: no monotonic sample-size trend, O4 non-replication) undermines the significance of the O3 per-class pattern by showing it is not generalizable.",
+      "evidence_refs": [
+        "paper/main.tex#Abstract",
+        "paper/main.tex#Sec 3.3",
+        "paper/main.tex#Sec 3.5"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:84",
+        "paper/main.tex:315-316",
+        "paper/main.tex:389"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Reframe the paper as a careful benchmark and honest negative result rather than a discovery of class-dependent architecture preference. The framing should emphasize: (a) the temporal-split and statistical-hygiene methodology as a template for future GW ML comparisons, (b) the CW veto connection as a practical contribution, (c) the negative O4 result as evidence that per-class patterns are run-specific and should not be assumed to generalize. This reframing does not require new experiments, only more accurate claim calibration."
+    },
+    {
+      "issue_id": "SIG-002",
+      "claim_ids": ["CLM-011"],
+      "severity": "major",
+      "summary": "The 'per-class evaluation should be standard practice' methodological recommendation is framed as a contribution but is standard advice in imbalanced-learning ML literature.",
+      "rationale": "The importance of per-class metrics under class imbalance has been established for over 15 years (He & Garcia 2009; Buda et al. 2018; Fernandez et al. 2018). The paper frames this as a novel methodological insight ('the forbidden-proxy lesson') without citing this literature. The actual contribution is demonstrating the consequences of ignoring per-class metrics in a specific GW context, which is legitimate but modest. For CQG significance, claiming to discover a known principle weakens the paper; acknowledging the principle is known and showing its concrete impact in the GW domain would be both more honest and more interesting to CQG readers who may not follow the ML fairness literature.",
+      "evidence_refs": [
+        "paper/main.tex#Sec 4.4",
+        "paper/main.tex#Conclusion"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:592-607",
+        "paper/main.tex:696-707"
+      ],
+      "support_status": "supported",
+      "blocking": false,
+      "required_action": "Cite the imbalanced-learning literature establishing per-class evaluation as best practice. Reframe the 'forbidden-proxy lesson' as a concrete GW demonstration of a known principle, not a discovery."
+    },
+    {
+      "issue_id": "SIG-003",
+      "claim_ids": ["CLM-006", "CLM-010", "CLM-013"],
+      "severity": "major",
+      "summary": "The CW veto analysis is the most venue-appropriate contribution but is undersold in favor of the weaker class-dependent-preference finding.",
+      "rationale": "For CQG, connecting ML classification to downstream GW search sensitivity is the contribution that most directly matters. The paper buries its most CQG-relevant result: (1) the combined duty-cycle difference (CNN retains 5pp more livetime, statistically significant) is hidden behind 'approximately equal veto efficiency' framing in the abstract; (2) the Power_Line per-class veto advantage (ViT 53.9% vs CNN 10.7%) is the strongest individual finding with direct CW relevance; (3) the finding that F1 advantage does not automatically translate to duty-cycle advantage is operationally important for CW practitioners choosing classifiers. All three of these are more interesting for CQG than the headline 'class-dependent architecture preference' finding. The paper's structural emphasis is inverted relative to CQG venue fit.",
+      "evidence_refs": [
+        "paper/tables/table_cw.tex",
+        "paper/main.tex#Abstract",
+        "paper/main.tex#Sec 3.6"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:117-118",
+        "paper/main.tex:471-509"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Restructure emphasis to foreground the CW veto findings: (a) the abstract should mention the CNN duty-cycle advantage alongside veto efficiency, (b) the CW disconnect between F1 advantage and duty-cycle advantage should be highlighted as a key result rather than a secondary observation, (c) the Power_Line veto result should receive more prominence. This does not require changing the paper structure, only adjusting the narrative hierarchy."
+    },
+    {
+      "issue_id": "SIG-004",
+      "claim_ids": ["CLM-001", "CLM-003", "CLM-008"],
+      "severity": "major",
+      "summary": "The rare-class narrative is simultaneously overclaimed (Introduction, Conclusion) and correctly hedged (Abstract, Results), creating a claim-proportionality problem that undermines the paper's credibility precisely where its statistical honesty should be a strength.",
+      "rationale": "This issue has been flagged by both the reader (RDR-001) and physics (PHY-003) stages. From the significance perspective, the problem is compounded: the rare-class CNN advantage is one of the two pillars of the 'class-dependent preference' headline finding (the other being the ViT advantage on common classes like Power_Line). If the rare-class direction is genuinely underpowered and uncertain, then the headline finding reduces to 'ViT is better overall and better on some common classes but we do not know what happens on rare classes' -- which is a weaker and less interesting story. The paper's statistical honesty about underpowering is its best feature, but the inconsistent propagation of that honesty through the narrative turns a strength into a liability.",
+      "evidence_refs": [
+        "paper/main.tex#Introduction",
+        "paper/main.tex#Conclusion",
+        "paper/main.tex#Sec 3.1",
+        "paper/tables/table_overall.tex"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:193",
+        "paper/main.tex:693-695"
+      ],
+      "support_status": "partially_supported",
+      "blocking": true,
+      "required_action": "Harmonize all rare-class language to the abstract's careful standard throughout the manuscript. Accept that the headline story becomes somewhat less symmetric ('ViT wins overall and on specific common classes; rare-class direction is uncertain') and frame this honestly. The remaining story is still publishable for CQG as a methods paper."
+    },
+    {
+      "issue_id": "SIG-005",
+      "claim_ids": ["CLM-005", "CLM-006"],
+      "severity": "minor",
+      "summary": "Venue fit assessment: the paper is adequate for CQG as a detector-characterization methods paper after claim recalibration, but would not survive at a more selective venue (PRL, Nature Physics).",
+      "rationale": "CQG publishes detector characterization, data analysis methods, and ML-for-GW papers regularly. The Gravity Spy papers (Zevin 2017, Zevin 2024) and Wu et al. (2024) are published in CQG. This paper fits the venue scope. However, CQG expects that methods papers provide either a clear advance in capability or a methodologically rigorous comparison that the community can build on. The paper satisfies the latter criterion if it (a) fixes the overclaiming identified across stages, (b) cites the canonical Living Reviews article (Cuoco et al. 2025) and Wu et al. (published CQG version), and (c) foregrounds the CW veto analysis. The paper would not meet the bar for PRL (no broad physics advance), Physical Review D (incremental ML benchmark), or Nature-family (no headline result). It is correctly targeted at CQG.",
+      "evidence_refs": [
+        "paper/main.tex#Introduction",
+        "paper/main.tex#Conclusion"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:84",
+        "paper/main.tex:688-711"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "No action required for venue targeting -- CQG is the correct venue. The paper needs the claim recalibrations flagged in SIG-001 through SIG-004 to meet the CQG bar."
+    },
+    {
+      "issue_id": "SIG-006",
+      "claim_ids": ["CLM-001", "CLM-004", "CLM-014"],
+      "severity": "minor",
+      "summary": "The single-seed limitation reduces the scientific weight of per-class claims to a degree not reflected in the narrative.",
+      "rationale": "All per-class F1 differences -- including the headline Power_Line (+0.507) and Chirp (-0.471) results -- are from a single training run. For classes with tiny test sets (Chirp: 7, Wandering_Line: 6, 1080Lines: 6), both training stochasticity and test-set sampling noise contribute substantially to the observed F1. The paper acknowledges this in Limitations but treats per-class differences as stable findings in the Results and Discussion. This is a proportionality issue: the paper's claims are calibrated to multi-seed reliability that does not exist. For CQG, 3-5 seeds would strengthen the paper substantially; without them, the per-class claims should be explicitly flagged as single-observation estimates throughout, not only in the limitations section.",
+      "evidence_refs": [
+        "paper/main.tex#Limitations",
+        "paper/tables/table_perclass.tex"
+      ],
+      "manuscript_locations": [
+        "paper/main.tex:639-642"
+      ],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Either run multi-seed experiments (strongly recommended for CQG revision) or propagate the single-seed caveat into the Results and Discussion sections when reporting per-class differences, not only in the Limitations section."
+    }
+  ],
+  "venue_fit": {
+    "target_journal": "Classical and Quantum Gravity",
+    "scope_match": "adequate",
+    "significance_match": "borderline",
+    "assessment": "CQG regularly publishes GW detector characterization and ML methods papers. The topic and scope are appropriate. The significance is borderline: the central claim (class-dependent architecture preference) is descriptive and not surprising, but the statistical methodology, CW veto connection, and honest negative results make the paper useful to the CQG detector characterization community. After major revision to recalibrate claims and foreground the CW analysis, the paper meets the CQG bar as a methods/benchmark paper. It does not meet the bar for a more selective venue."
+  },
+  "significance_classification": "technically_useful_but_limited_advance",
+  "claim_proportionality": {
+    "assessment": "overclaimed_in_specific_areas",
+    "details": "The paper overclaims in three specific areas: (1) rare-class CNN advantage stated as directional finding despite underpowering, (2) 'first quantitative assessment' for a proxy-level CW analysis, (3) 'forbidden-proxy lesson' framed as novel insight rather than application of known principles. The overall macro-F1 improvement and per-class patterns on common classes are proportionately claimed. After targeted revisions, claim proportionality would be adequate."
+  },
+  "why_it_might_matter": [
+    "Provides the first identical-recipe paired benchmark with statistical testing for ViT vs CNN on Gravity Spy data, establishing a methodological template for future GW ML comparisons",
+    "Connects glitch classification performance to CW search data quality through a veto efficiency analysis, even at proxy level -- this bridges a gap between classification papers and search-impact papers",
+    "Demonstrates concretely that aggregate metrics hide heterogeneous per-class effects in the GW glitch context, with quantitative consequences (the rare-class regression is masked by the overall improvement)",
+    "The temporal split vs random split comparison (95.4% vs 91.8% accuracy) quantifies the effect of data leakage in GW glitch classification for the first time",
+    "The O4 non-replication is a practically useful negative result: it warns against assuming that architecture advantages transfer across observing runs without retraining"
+  ],
+  "why_it_might_not_matter": [
+    "The central finding (class-dependent architecture preference) is descriptively true but not predictive or explanatory -- the paper cannot tell practitioners which architecture to use for a new class without running the experiment",
+    "The result does not replicate on O4 as a generalizable pattern, reducing it to an O3-specific observation",
+    "The physical interpretations (self-attention for harmonics, CNN bias as regularization) are post-hoc narratives without direct evidence and may not be correct",
+    "The CW analysis uses a sample-count proxy rather than PSD-weighted sensitivity, limiting its value for CW practitioners who need quantitative sensitivity estimates",
+    "The single-seed limitation means the per-class pattern could shift substantially with a different random initialization, especially for rare classes",
+    "The 'per-class evaluation matters' message is well-known in ML and does not represent a novel contribution to either the ML or GW communities"
+  ],
+  "confidence": "high",
+  "recommendation_ceiling": "minor_revision"
+}

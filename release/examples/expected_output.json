@@ -1,0 +1,217 @@
+[
+  {
+    "filename": "qnPsv3hL2x_1.0s.png",
+    "true_label": "Blip",
+    "image_path": "data/spectrograms/Blip/qnPsv3hL2x_1.0s.png",
+    "vit_prediction": "Blip",
+    "vit_confidence": 0.990561,
+    "vit_top3": [
+      {
+        "rank": 1,
+        "class": "Blip",
+        "probability": 0.990561
+      },
+      {
+        "rank": 2,
+        "class": "Blip_Low_Frequency",
+        "probability": 0.003823
+      },
+      {
+        "rank": 3,
+        "class": "Repeating_Blips",
+        "probability": 0.001406
+      }
+    ],
+    "cnn_prediction": "Blip",
+    "cnn_confidence": 0.655181,
+    "cnn_top3": [
+      {
+        "rank": 1,
+        "class": "Blip",
+        "probability": 0.655181
+      },
+      {
+        "rank": 2,
+        "class": "Repeating_Blips",
+        "probability": 0.323093
+      },
+      {
+        "rank": 3,
+        "class": "Extremely_Loud",
+        "probability": 0.002679
+      }
+    ]
+  },
+  {
+    "filename": "EMxVe5MHAz_1.0s.png",
+    "true_label": "Power_Line",
+    "image_path": "data/spectrograms/Power_Line/EMxVe5MHAz_1.0s.png",
+    "vit_prediction": "Power_Line",
+    "vit_confidence": 0.997734,
+    "vit_top3": [
+      {
+        "rank": 1,
+        "class": "Power_Line",
+        "probability": 0.997734
+      },
+      {
+        "rank": 2,
+        "class": "No_Glitch",
+        "probability": 0.000965
+      },
+      {
+        "rank": 3,
+        "class": "Blip_Low_Frequency",
+        "probability": 0.000165
+      }
+    ],
+    "cnn_prediction": "Power_Line",
+    "cnn_confidence": 0.912969,
+    "cnn_top3": [
+      {
+        "rank": 1,
+        "class": "Power_Line",
+        "probability": 0.912969
+      },
+      {
+        "rank": 2,
+        "class": "Air_Compressor",
+        "probability": 0.057046
+      },
+      {
+        "rank": 3,
+        "class": "No_Glitch",
+        "probability": 0.007583
+      }
+    ]
+  },
+  {
+    "filename": "kwYnhvabQ8_1.0s.png",
+    "true_label": "Chirp",
+    "image_path": "data/spectrograms/Chirp/kwYnhvabQ8_1.0s.png",
+    "vit_prediction": "Blip_Low_Frequency",
+    "vit_confidence": 0.944321,
+    "vit_top3": [
+      {
+        "rank": 1,
+        "class": "Blip_Low_Frequency",
+        "probability": 0.944321
+      },
+      {
+        "rank": 2,
+        "class": "Blip",
+        "probability": 0.033233
+      },
+      {
+        "rank": 3,
+        "class": "Repeating_Blips",
+        "probability": 0.005682
+      }
+    ],
+    "cnn_prediction": "Chirp",
+    "cnn_confidence": 0.514547,
+    "cnn_top3": [
+      {
+        "rank": 1,
+        "class": "Chirp",
+        "probability": 0.514547
+      },
+      {
+        "rank": 2,
+        "class": "Blip_Low_Frequency",
+        "probability": 0.274587
+      },
+      {
+        "rank": 3,
+        "class": "Blip",
+        "probability": 0.14339
+      }
+    ]
+  },
+  {
+    "filename": "mRGHzX9W9X_1.0s.png",
+    "true_label": "No_Glitch",
+    "image_path": "data/spectrograms/No_Glitch/mRGHzX9W9X_1.0s.png",
+    "vit_prediction": "No_Glitch",
+    "vit_confidence": 0.991169,
+    "vit_top3": [
+      {
+        "rank": 1,
+        "class": "No_Glitch",
+        "probability": 0.991169
+      },
+      {
+        "rank": 2,
+        "class": "1400Ripples",
+        "probability": 0.004831
+      },
+      {
+        "rank": 3,
+        "class": "Power_Line",
+        "probability": 0.000853
+      }
+    ],
+    "cnn_prediction": "No_Glitch",
+    "cnn_confidence": 0.989384,
+    "cnn_top3": [
+      {
+        "rank": 1,
+        "class": "No_Glitch",
+        "probability": 0.989384
+      },
+      {
+        "rank": 2,
+        "class": "1400Ripples",
+        "probability": 0.003378
+      },
+      {
+        "rank": 3,
+        "class": "Helix",
+        "probability": 0.002471
+      }
+    ]
+  },
+  {
+    "filename": "XvHH2XRheR_1.0s.png",
+    "true_label": "Scattered_Light",
+    "image_path": "data/spectrograms/Scattered_Light/XvHH2XRheR_1.0s.png",
+    "vit_prediction": "Scattered_Light",
+    "vit_confidence": 0.995357,
+    "vit_top3": [
+      {
+        "rank": 1,
+        "class": "Scattered_Light",
+        "probability": 0.995357
+      },
+      {
+        "rank": 2,
+        "class": "Extremely_Loud",
+        "probability": 0.001687
+      },
+      {
+        "rank": 3,
+        "class": "Fast_Scattering",
+        "probability": 0.000669
+      }
+    ],
+    "cnn_prediction": "Scattered_Light",
+    "cnn_confidence": 0.962074,
+    "cnn_top3": [
+      {
+        "rank": 1,
+        "class": "Scattered_Light",
+        "probability": 0.962074
+      },
+      {
+        "rank": 2,
+        "class": "Low_Frequency_Lines",
+        "probability": 0.017069
+      },
+      {
+        "rank": 3,
+        "class": "Extremely_Loud",
+        "probability": 0.004967
+      }
+    ]
+  }
+]

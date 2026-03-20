@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "round": 1,
+  "manuscript_path": "paper/main.tex",
+  "manuscript_sha256": "0780ee5f89b8af1949aa7e802c7919c671ae2eefa8cac2066fa563f0cb5ddcfe",
+  "claims": [
+    {
+      "claim_id": "CLM-001",
+      "claim_type": "main_result",
+      "text": "Architecture preference for GW glitch classification is class-dependent: ViT outperforms CNN on some classes (e.g., Power_Line) while CNN retains advantages on others (e.g., Chirp).",
+      "artifact_path": "paper/main.tex",
+      "section": "Abstract, Sec 3.1, Sec 6"
+    },
+    {
+      "claim_id": "CLM-002",
+      "claim_type": "main_result",
+      "text": "ViT achieves significantly higher overall macro-F1 than CNN (0.723 vs 0.679, p=0.0002) on O3 data.",
+      "artifact_path": "paper/tables/table_overall.tex",
+      "section": "Sec 3.2"
+    },
+    {
+      "claim_id": "CLM-003",
+      "claim_type": "main_result",
+      "text": "Rare-class comparison is statistically underpowered (aggregate power = 0.20), yielding insufficient evidence to determine whether ViT improves or degrades rare-class performance.",
+      "artifact_path": "paper/main.tex",
+      "section": "Abstract, Sec 3.1, Sec 3.2"
+    },
+    {
+      "claim_id": "CLM-004",
+      "claim_type": "main_result",
+      "text": "Architecture preference is not a monotonic function of training set size (Spearman rho = -0.034, p = 0.879 on O4; rho = -0.119, p = 0.59 on O3).",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 3.3"
+    },
+    {
+      "claim_id": "CLM-005",
+      "claim_type": "novelty",
+      "text": "This is a controlled per-class comparison of ViT vs CNN under identical training conditions on Gravity Spy data; prior work reported only aggregate metrics.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 1 (contribution 1)"
+    },
+    {
+      "claim_id": "CLM-006",
+      "claim_type": "novelty",
+      "text": "First quantitative assessment of ViT vs CNN classification quality for continuous gravitational-wave search data quality using duty-cycle-based veto efficiency.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 1 (contribution 3)"
+    },
+    {
+      "claim_id": "CLM-007",
+      "claim_type": "physical_interpretation",
+      "text": "ViT's advantage on Power_Line is due to global self-attention capturing multi-frequency harmonic structure at 60 Hz and harmonics that local convolutional filters struggle to integrate.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 3.1, Sec 4.1"
+    },
+    {
+      "claim_id": "CLM-008",
+      "claim_type": "physical_interpretation",
+      "text": "CNN's advantage on rare classes is due to convolutional inductive bias (translation equivariance) providing better regularization from limited data than ViT's flexible attention.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 4.1"
+    },
+    {
+      "claim_id": "CLM-009",
+      "claim_type": "generality",
+      "text": "Both models generalize to O4 data with <20% relative degradation in macro-F1, though per-class preferences do not replicate across observing runs.",
+      "artifact_path": "paper/tables/table_overall.tex",
+      "section": "Sec 3.5"
+    },
+    {
+      "claim_id": "CLM-010",
+      "claim_type": "main_result",
+      "text": "At matched deadtime (22.4%), veto efficiency for CW searches is approximately equal (ViT 0.745 vs CNN 0.735).",
+      "artifact_path": "paper/tables/table_cw.tex",
+      "section": "Sec 3.6"
+    },
+    {
+      "claim_id": "CLM-011",
+      "claim_type": "significance",
+      "text": "Per-class evaluation, not aggregate accuracy, should be standard practice when deploying new architectures for imbalanced scientific classification tasks.",
+      "artifact_path": "paper/main.tex",
+      "section": "Abstract, Sec 4.4, Sec 6"
+    },
+    {
+      "claim_id": "CLM-012",
+      "claim_type": "method",
+      "text": "Temporal split (by GPS time with 60-second gaps) explains the accuracy gap between this work (~91-93%) and published Gravity Spy benchmarks (95-99%); random split recovers 95.4% accuracy.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 3.2"
+    },
+    {
+      "claim_id": "CLM-013",
+      "claim_type": "physical_interpretation",
+      "text": "Power_Line advantage is the most CW-relevant finding because 60 Hz harmonics directly contaminate CW searches in the most sensitive frequency bands.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 3.6, Sec 4.3"
+    },
+    {
+      "claim_id": "CLM-014",
+      "claim_type": "generality",
+      "text": "Per-class architecture preferences are observing-run-specific observations, not universal laws.",
+      "artifact_path": "paper/main.tex",
+      "section": "Sec 4.2"
+    }
+  ]
+}

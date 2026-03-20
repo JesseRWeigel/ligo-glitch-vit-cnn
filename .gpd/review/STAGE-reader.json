@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "round": 1,
+  "stage_id": "reader",
+  "stage_kind": "reader",
+  "manuscript_path": "paper/main.tex",
+  "manuscript_sha256": "0780ee5f89b8af1949aa7e802c7919c671ae2eefa8cac2066fa563f0cb5ddcfe",
+  "claims_reviewed": [
+    "CLM-001", "CLM-002", "CLM-003", "CLM-004", "CLM-005", "CLM-006",
+    "CLM-007", "CLM-008", "CLM-009", "CLM-010", "CLM-011", "CLM-012",
+    "CLM-013", "CLM-014"
+  ],
+  "summary": "The paper presents a controlled ViT vs CNN comparison for 23-class Gravity Spy glitch classification on O3 data, arguing that architecture preference is class-dependent rather than uniformly favoring either model. ViT wins on overall macro-F1 (p<0.001) but the rare-class comparison is underpowered (power=0.20). The paper is unusually honest about its statistical limitations and frames its negative result (no monotonic sample-size trend, non-replication on O4) as a contribution. The strongest narrative weakness is a persistent tension between hedged statistical language in the methods/results and stronger causal/directional language in the introduction, conclusion, and discussion, particularly around rare-class CNN advantages and physical-interpretation claims that lack direct evidence (attention maps, ablations).",
+  "strengths": [
+    "Honest power analysis and explicit acknowledgment that rare-class comparison is underpowered -- rare in applied ML papers",
+    "Temporal split methodology with random-split control experiment to explain accuracy gap vs published benchmarks",
+    "Consistent use of macro-F1 with bootstrap CIs and paired tests; primary metric choice is well-motivated",
+    "O4 zero-shot generalization test provides distribution-shift evidence, and non-replication is reported honestly",
+    "Limitations section is thorough (single seed, single view, coarse CW proxy all acknowledged)"
+  ],
+  "findings": [
+    {
+      "issue_id": "RDR-001",
+      "claim_ids": ["CLM-001", "CLM-003", "CLM-008"],
+      "severity": "major",
+      "summary": "Introduction and conclusion state 'rare-class performance declines' or 'CNN retains advantages on rare classes' as directional findings, but the paper's own power analysis shows this comparison is underpowered (power=0.20). The abstract is more careful; the introduction (line 193-197) and conclusion (line 693-695) overclaim.",
+      "rationale": "Line 193: 'yet rare-class performance declines' is stated without qualification. Line 694: 'CNN retains advantages on rare classes where limited training data appears insufficient for learning effective attention patterns' converts an underpowered observation into a causal narrative. The paper's own Table 1 shows p=0.884 for the rare-class comparison. These statements are materially stronger than the evidence.",
+      "evidence_refs": ["paper/main.tex#Introduction", "paper/main.tex#Conclusion", "paper/tables/table_overall.tex"],
+      "manuscript_locations": ["paper/main.tex:193", "paper/main.tex:694"],
+      "support_status": "partially_supported",
+      "blocking": true,
+      "required_action": "Harmonize introduction and conclusion language with the abstract's hedged phrasing. The rare-class direction must be framed as 'insufficient evidence' throughout, not selectively."
+    },
+    {
+      "issue_id": "RDR-002",
+      "claim_ids": ["CLM-007", "CLM-008"],
+      "severity": "major",
+      "summary": "Physical-interpretation claims about WHY ViT helps on Power_Line (global self-attention capturing harmonics) and WHY CNN helps on rare classes (convolutional inductive bias as regularization) are presented as explanations but have no direct evidence (no attention maps, no ablations, no feature visualization).",
+      "rationale": "Sec 4.1 presents a 'natural interpretation in terms of architectural inductive biases' but this is post-hoc narrative fitting. The paper acknowledges the rare-class interpretation is 'speculative' (line 541) but does not similarly qualify the Power_Line interpretation. For CQG, physical-interpretation claims need either direct evidence or consistent explicit qualification as hypotheses.",
+      "evidence_refs": ["paper/main.tex#Discussion"],
+      "manuscript_locations": ["paper/main.tex:523-534", "paper/main.tex:536-544"],
+      "support_status": "unsupported",
+      "blocking": false,
+      "required_action": "Either add attention-map or ablation evidence, or explicitly label all inductive-bias interpretations as hypotheses (not just the rare-class one)."
+    },
+    {
+      "issue_id": "RDR-003",
+      "claim_ids": ["CLM-006", "CLM-010"],
+      "severity": "major",
+      "summary": "CW veto analysis framing tension: abstract says 'approximately equal' veto efficiency (0.745 vs 0.735), but Table 3 shows CNN retains substantially more livetime (combined DC 0.788 vs 0.738, delta=-0.051 with tight CI). The 'approximately equal' framing in the abstract is misleading.",
+      "rationale": "The veto efficiency numbers (0.745 vs 0.735) are close, but the duty cycle -- which is the operationally relevant quantity for CW searches -- shows a 5 percentage-point CNN advantage with non-overlapping CI. The abstract conflates veto efficiency with the full CW data-quality picture. Additionally, calling this the 'first quantitative assessment' (CLM-006) overstates a sample-count proxy analysis that the paper itself calls 'coarse' in limitations.",
+      "evidence_refs": ["paper/tables/table_cw.tex", "paper/main.tex#Abstract"],
+      "manuscript_locations": ["paper/main.tex:117-118", "paper/main.tex:480-483"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Abstract should mention duty-cycle difference alongside veto efficiency. Temper 'first quantitative assessment' to acknowledge proxy nature upfront (not only in limitations)."
+    },
+    {
+      "issue_id": "RDR-004",
+      "claim_ids": ["CLM-001", "CLM-002", "CLM-004"],
+      "severity": "major",
+      "summary": "All per-class conclusions rest on a single training run with a fixed random seed. For classes with tiny test sets (Chirp: 7 samples, Wandering_Line: 6, 1080Lines: 6), per-class F1 is highly stochastic across both training seeds and bootstrap resamples.",
+      "rationale": "The paper acknowledges this in Limitations (item 3) but does not adjust the strength of per-class claims accordingly. The headline result about 'class-dependent architecture preference' (CLM-001) depends on per-class F1 differences that may not survive re-training. This is especially concerning for Chirp (0.000 vs 0.471) which anchors much of the narrative.",
+      "evidence_refs": ["paper/main.tex#Limitations", "paper/tables/table_perclass.tex"],
+      "manuscript_locations": ["paper/main.tex:639-642"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Either run multi-seed experiments (3-5 seeds) or explicitly caveat ALL per-class claims (not just in limitations) as single-seed observations. The Chirp narrative anchor is particularly fragile."
+    },
+    {
+      "issue_id": "RDR-005",
+      "claim_ids": ["CLM-001"],
+      "severity": "minor",
+      "summary": "Title asks 'When do Vision Transformers help?' but the paper concludes it cannot answer this -- the relationship is not a monotonic function of sample size and no alternative predictive framework is offered.",
+      "rationale": "The title frames the paper as providing an answer to the 'when' question. The paper actually delivers a negative result: it is class-dependent but unpredictably so, and the pattern does not replicate on O4. The title slightly oversells the contribution. A title like 'Class-dependent architecture preferences...' (the subtitle) would be more accurate as the main title.",
+      "evidence_refs": ["paper/main.tex#Title"],
+      "manuscript_locations": ["paper/main.tex:84"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Consider whether the title's question framing is appropriate given the paper cannot answer it predictively."
+    },
+    {
+      "issue_id": "RDR-006",
+      "claim_ids": ["CLM-009", "CLM-014"],
+      "severity": "minor",
+      "summary": "O4 generalization claim '<20% degradation' frames a pass/fail threshold that is not motivated or standard in the literature.",
+      "rationale": "The 20% threshold appears as an ad-hoc success criterion. ViT degrades 7.4% relative vs CNN 1.7% -- a 4x ratio -- but this is presented as both passing the same bar. The asymmetric degradation is discussed but the framing buries the ViT disadvantage.",
+      "evidence_refs": ["paper/main.tex#Sec 3.5", "paper/tables/table_overall.tex"],
+      "manuscript_locations": ["paper/main.tex:448-450"],
+      "support_status": "partially_supported",
+      "blocking": false,
+      "required_action": "Either motivate the 20% threshold from the literature or report the degradation numbers without a pass/fail framing."
+    },
+    {
+      "issue_id": "RDR-007",
+      "claim_ids": ["CLM-011"],
+      "severity": "minor",
+      "summary": "The 'forbidden-proxy lesson' methodological recommendation (per-class evaluation should be standard) is well-known in ML fairness and imbalanced-learning literature. The paper frames it as a contribution without acknowledging this prior methodological discourse.",
+      "rationale": "The macro-F1 vs accuracy distinction and the importance of per-class metrics in imbalanced settings is established in ML literature (e.g., He & Garcia 2009, Buda et al. 2018). Framing this as a novel methodological insight for 'imbalanced scientific classification tasks' overclaims originality.",
+      "evidence_refs": ["paper/main.tex#Discussion"],
+      "manuscript_locations": ["paper/main.tex:592-607"],
+      "support_status": "supported",
+      "blocking": false,
+      "required_action": "Acknowledge that per-class evaluation is established best practice in imbalanced learning; the contribution is demonstrating it concretely in the GW context, not discovering the principle."
+    }
+  ],
+  "confidence": "high",
+  "recommendation_ceiling": "major_revision"
+}

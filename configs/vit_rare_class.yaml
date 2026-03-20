@@ -1,0 +1,52 @@
+# ViT-B/16 config. IDENTICAL to cnn_baseline.yaml except model, LR, layer_decay, and output paths.
+# All other hyperparameters (optimizer, scheduler, loss, augmentation,
+# batch size, epochs, early stopping) are shared with the CNN baseline.
+
+model:
+  architecture: vit_base_patch16_224.augreg_in21k_ft_in1k
+  pretrained: augreg_in21k_ft_in1k
+  num_classes: 23
+
+data:
+  train_manifest: data/metadata/train_manifest.csv
+  val_manifest: data/metadata/val_manifest.csv
+  test_manifest: data/metadata/test_manifest.csv
+  image_root: "."
+  duration: "1.0s"
+  image_size: 224
+  num_workers: 4
+  pin_memory: true
+
+training:
+  optimizer: AdamW
+  learning_rate: 1.0e-4   # ViT rate; CNN uses 1e-3 (10x lower for ViT fine-tuning)
+  layer_decay: 0.75        # ViT-specific: per Steiner et al. 2022, decay=0.75 for fine-tuning
+  weight_decay: 0.01
+  batch_size: 64
+  epochs: 100
+  warmup_epochs: 5
+  scheduler: cosine
+  gradient_clip_max_norm: 1.0
+  mixed_precision: fp16
+  early_stopping_patience: 10
+  early_stopping_metric: val_macro_f1
+  label_smoothing: 0.1
+
+loss:
+  type: focal
+  gamma: 2.0
+  alpha: sqrt_inverse  # Computed from training set class counts
+
+sampling:
+  strategy: weighted_random
+  weights: sqrt_inverse
+  replacement: true
+
+evaluation:
+  bootstrap_resamples: 10000
+  confidence_level: 0.95
+  rare_threshold_train: 200  # Classes with < 200 train samples
+
+seed: 42
+output_dir: results/03-vit-rare-class
+checkpoint_dir: checkpoints/03-vit-rare-class

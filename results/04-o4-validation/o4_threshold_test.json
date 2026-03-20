@@ -1,0 +1,188 @@
+{
+  "spearman_o4": {
+    "rho": -0.03359683794466403,
+    "p_value": 0.8790434876667226,
+    "n_classes": 23,
+    "min_o4_samples": 10,
+    "status": "not_confirmed"
+  },
+  "sign_test_o4": {
+    "n_positive": 9,
+    "n_negative": 11,
+    "n_zero": 0,
+    "n_total": 20,
+    "p_value": 0.8238029479980469,
+    "vit_win_rate": 0.45,
+    "status": "cnn_majority"
+  },
+  "sensitivity_analysis": [
+    {
+      "rho": -0.03359683794466403,
+      "p_value": 0.8790434876667226,
+      "n_classes": 23,
+      "min_o4_samples": 5,
+      "status": "not_confirmed"
+    },
+    {
+      "rho": -0.03359683794466403,
+      "p_value": 0.8790434876667226,
+      "n_classes": 23,
+      "min_o4_samples": 10,
+      "status": "not_confirmed"
+    },
+    {
+      "rho": -0.03359683794466403,
+      "p_value": 0.8790434876667226,
+      "n_classes": 23,
+      "min_o4_samples": 15,
+      "status": "not_confirmed"
+    },
+    {
+      "rho": -0.03359683794466403,
+      "p_value": 0.8790434876667226,
+      "n_classes": 23,
+      "min_o4_samples": 20,
+      "status": "not_confirmed"
+    },
+    {
+      "rho": -0.18125352907961606,
+      "p_value": 0.41952329103344255,
+      "n_classes": 22,
+      "min_o4_samples": 30,
+      "status": "not_confirmed"
+    }
+  ],
+  "o3_cross_check": {
+    "rho": -0.11857707509881424,
+    "p_value": 0.5899765469581978,
+    "n_classes": 23,
+    "note": "Cross-check using O3 test set F1 differences"
+  },
+  "threshold_persists": "false",
+  "interpretation": "Threshold NOT confirmed on O4; report as O3-specific with caveat",
+  "backtracking_note": "The sample-efficiency threshold may be O3-specific. Paper should report with caveat.",
+  "n_classes_reliable": 23,
+  "n_classes_total": 23,
+  "above_threshold_classes": [
+    {
+      "class": "Light_Modulation",
+      "n_train_o3": 142,
+      "f1_diff_o4": 0.0105248151118237,
+      "vit_wins": true
+    },
+    {
+      "class": "Paired_Doves",
+      "n_train_o3": 216,
+      "f1_diff_o4": 0.1080587887929751,
+      "vit_wins": true
+    },
+    {
+      "class": "Violin_Mode",
+      "n_train_o3": 274,
+      "f1_diff_o4": 0.0263089278264496,
+      "vit_wins": true
+    },
+    {
+      "class": "1080Lines",
+      "n_train_o3": 341,
+      "f1_diff_o4": -0.0830721003134796,
+      "vit_wins": false
+    },
+    {
+      "class": "Scratchy",
+      "n_train_o3": 558,
+      "f1_diff_o4": 0.058977899892486,
+      "vit_wins": true
+    },
+    {
+      "class": "Repeating_Blips",
+      "n_train_o3": 1061,
+      "f1_diff_o4": -0.0052708843997888,
+      "vit_wins": false
+    },
+    {
+      "class": "Air_Compressor",
+      "n_train_o3": 1361,
+      "f1_diff_o4": 0.2365508507240791,
+      "vit_wins": true
+    },
+    {
+      "class": "Power_Line",
+      "n_train_o3": 1582,
+      "f1_diff_o4": 0.3935164891603077,
+      "vit_wins": true
+    },
+    {
+      "class": "1400Ripples",
+      "n_train_o3": 2428,
+      "f1_diff_o4": -0.1799638336347199,
+      "vit_wins": false
+    },
+    {
+      "class": "Low_Frequency_Lines",
+      "n_train_o3": 2853,
+      "f1_diff_o4": -0.0580996759449445,
+      "vit_wins": false
+    },
+    {
+      "class": "Whistle",
+      "n_train_o3": 6299,
+      "f1_diff_o4": -0.0466627302148221,
+      "vit_wins": false
+    },
+    {
+      "class": "Blip",
+      "n_train_o3": 7156,
+      "f1_diff_o4": -0.0335332605870386,
+      "vit_wins": false
+    },
+    {
+      "class": "No_Glitch",
+      "n_train_o3": 11568,
+      "f1_diff_o4": -0.0163757514736607,
+      "vit_wins": false
+    },
+    {
+      "class": "Koi_Fish",
+      "n_train_o3": 11950,
+      "f1_diff_o4": -0.0013002783974087,
+      "vit_wins": false
+    },
+    {
+      "class": "Extremely_Loud",
+      "n_train_o3": 13469,
+      "f1_diff_o4": 0.0110952969877994,
+      "vit_wins": true
+    },
+    {
+      "class": "Blip_Low_Frequency",
+      "n_train_o3": 13659,
+      "f1_diff_o4": -0.0321215529372513,
+      "vit_wins": false
+    },
+    {
+      "class": "Low_Frequency_Burst",
+      "n_train_o3": 19834,
+      "f1_diff_o4": -0.0689828334947343,
+      "vit_wins": false
+    },
+    {
+      "class": "Tomte",
+      "n_train_o3": 30403,
+      "f1_diff_o4": 0.0751384086933099,
+      "vit_wins": true
+    },
+    {
+      "class": "Fast_Scattering",
+      "n_train_o3": 34555,
+      "f1_diff_o4": 0.0361877742250027,
+      "vit_wins": true
+    },
+    {
+      "class": "Scattered_Light",
+      "n_train_o3": 68160,
+      "f1_diff_o4": -0.0385266539252794,
+      "vit_wins": false
+    }
+  ]
+}
