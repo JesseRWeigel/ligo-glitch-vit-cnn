@@ -25,6 +25,18 @@ def _macro_f1(y_true, y_pred):
     return float(f1_score(y_true, y_pred, average="macro", zero_division=0))
 
 
+def _validate_paired_labels(y_true, y_pred_a, y_pred_b):
+    """Require one truth label and one prediction per model for each event."""
+    arrays = tuple(np.asarray(values) for values in (y_true, y_pred_a, y_pred_b))
+    if any(values.ndim != 1 for values in arrays):
+        raise ValueError("Truth and both predictions must be one-dimensional")
+    if any(len(values) == 0 for values in arrays):
+        raise ValueError("Truth and both predictions must be non-empty")
+    if any(len(values) != len(arrays[0]) for values in arrays[1:]):
+        raise ValueError("Truth and both predictions must have the same number of labels")
+    return arrays
+
+
 def paired_bootstrap_rare_f1(
     y_true, y_pred_a, y_pred_b, rare_class_indices,
     n_resamples=10000, seed=42, confidence=0.95,
@@ -63,7 +75,7 @@ def paired_bootstrap_rare_f1(
         rare_f1_b : float
         bootstrap_deltas : np.ndarray (n_resamples,)
     """
-    assert len(y_true) == len(y_pred_a) == len(y_pred_b), "Array lengths must match"
+    y_true, y_pred_a, y_pred_b = _validate_paired_labels(y_true, y_pred_a, y_pred_b)
     assert n_resamples >= 10000, f"Need >= 10,000 resamples, got {n_resamples}"
 
     N = len(y_true)
@@ -119,6 +131,7 @@ def paired_bootstrap_metric(
     -------
     dict with point_estimate_difference, ci_lower, ci_upper, p_value, metric_a, metric_b.
     """
+    y_true, y_pred_a, y_pred_b = _validate_paired_labels(y_true, y_pred_a, y_pred_b)
     N = len(y_true)
     rng = np.random.RandomState(seed)
 
