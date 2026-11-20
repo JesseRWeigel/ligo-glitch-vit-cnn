@@ -89,6 +89,26 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### CPU-only synthetic smoke
+
+Use Python 3.12 and the small CPU dependencies to exercise the existing temporal
+split and macro-F1 routines without downloading Gravity Spy, installing PyTorch,
+or running a classifier:
+
+```bash
+python -m venv .venv-smoke && source .venv-smoke/bin/activate
+python -m pip install -r requirements-smoke.txt
+python -m unittest discover -s tests -v
+python scripts/smoke_evaluation.py | diff -u docs/synthetic-smoke-result.json -
+```
+
+The [expected manifest](docs/synthetic-smoke-result.json) records a checksum of
+the invented event rows and stub predictions, all split memberships (including
+the two omitted gap events), and macro-F1 on the two invented test rows. The
+tests reject duplicate IDs, missing membership, and a cross-split gap violation.
+This is a wiring check with stipulated predictions. Neither checkpoints, bootstraps,
+training seeds nor the scientific findings are verified by this smoke run.
+
 ### Full Pipeline
 
 ```bash
