@@ -3,7 +3,7 @@
 
 Uses the Zenodo REST API to discover file URLs and download the classification
 CSV files for O1-O3b data. Implements resume capability via file size checking
-and optional checksum verification.
+and checksum verification before using an existing or new file.
 
 Conventions:
   ASSERT_CONVENTION: natural_units=SI, coordinate_system=Q-transform spectrograms 10-2048 Hz log axis 224x224 px
@@ -12,7 +12,7 @@ Conventions:
 import hashlib
 import json
 import os
-import sys
+import tempfile
 from pathlib import Path
 
 import requests
@@ -39,50 +39,57 @@ def get_zenodo_files():
     return files
 
 
+def verify_file(path, expected_size, checksum_str):
+    """Raise ValueError unless the file matches the advertised integrity metadata."""
+    actual_size = path.stat().st_size
+    if actual_size != expected_size:
+        raise ValueError(f"Size mismatch for {path.name}: expected {expected_size}, got {actual_size}")
+
+    if checksum_str:
+        algorithm, separator, expected_digest = checksum_str.partition(":")
+        if not separator or not expected_digest:
+            raise ValueError(f"Invalid Zenodo checksum for {path.name}: {checksum_str!r}")
+        with path.open("rb") as f:
+            actual_digest = hashlib.file_digest(f, algorithm).hexdigest()
+        if actual_digest != expected_digest.lower():
+            raise ValueError(
+                f"Checksum mismatch for {path.name}: expected {expected_digest}, got {actual_digest}"
+            )
+
+
 def download_file(file_meta, output_dir):
-    """Download a single file with resume capability and checksum verification."""
+    """Reuse verified files or replace them only after a complete, verified download."""
     filename = file_meta["key"]
     url = file_meta["links"]["self"]
     expected_size = file_meta["size"]
-    checksum_str = file_meta.get("checksum", "")
-
+    checksum_str = file_meta.get("checksum") or ""
     output_path = output_dir / filename
 
-    # Resume capability: skip if file exists with correct size
     if output_path.exists():
-        current_size = output_path.stat().st_size
-        if current_size == expected_size:
-            print(f"  Skipping {filename} (already complete: {current_size} bytes)")
-            return output_path
+        try:
+            verify_file(output_path, expected_size, checksum_str)
+        except ValueError as exc:
+            print(f"  {exc}. Re-downloading {filename}.")
         else:
-            print(f"  Resuming {filename} (have {current_size}/{expected_size} bytes)")
-            # For simplicity, re-download if sizes differ
-            output_path.unlink()
+            print(f"  Skipping {filename} (verified {expected_size} bytes)")
+            return output_path
 
     print(f"  Downloading {filename} ({expected_size / (1024*1024):.1f} MB)...")
-    resp = requests.get(url, stream=True, timeout=300)
-    resp.raise_for_status()
-
-    with open(output_path, "wb") as f:
-        with tqdm(total=expected_size, unit="B", unit_scale=True, desc=filename) as pbar:
-            for chunk in resp.iter_content(chunk_size=8192):
-                f.write(chunk)
-                pbar.update(len(chunk))
-
-    # Verify size
-    actual_size = output_path.stat().st_size
-    assert actual_size == expected_size, (
-        f"Size mismatch for {filename}: expected {expected_size}, got {actual_size}"
-    )
-
-    # Verify checksum if available (Zenodo uses md5:hash format)
-    if checksum_str.startswith("md5:"):
-        expected_md5 = checksum_str.split(":", 1)[1]
-        actual_md5 = hashlib.md5(output_path.read_bytes()).hexdigest()
-        assert actual_md5 == expected_md5, (
-            f"Checksum mismatch for {filename}: expected {expected_md5}, got {actual_md5}"
-        )
-        print(f"  Checksum verified: {actual_md5}")
+    temp_path = None
+    try:
+        with requests.get(url, stream=True, timeout=300) as resp:
+            resp.raise_for_status()
+            with tempfile.NamedTemporaryFile(dir=output_dir, prefix=".zenodo-", delete=False) as f:
+                temp_path = Path(f.name)
+                with tqdm(total=expected_size, unit="B", unit_scale=True, desc=filename) as pbar:
+                    for chunk in resp.iter_content(chunk_size=8192):
+                        f.write(chunk)
+                        pbar.update(len(chunk))
+        verify_file(temp_path, expected_size, checksum_str)
+        temp_path.replace(output_path)
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
 
     return output_path
 
