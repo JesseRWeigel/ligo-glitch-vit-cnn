@@ -106,6 +106,8 @@ The [expected manifest](docs/synthetic-smoke-result.json) records a checksum of
 the invented event rows and stub predictions, all split memberships (including
 the two omitted gap events), and macro-F1 on the two invented test rows. The
 tests reject duplicate IDs, missing membership, and a cross-split gap violation.
+Mocked HTTP tests also check that cached metadata matches Zenodo's checksum when
+one is advertised and that failed downloads do not replace the destination.
 This is a wiring check with stipulated predictions. Neither checkpoints, bootstraps,
 training seeds nor the scientific findings are verified by this smoke run.
 
