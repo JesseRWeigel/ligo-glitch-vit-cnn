@@ -118,7 +118,7 @@ python scripts/02_parse_metadata.py
 python scripts/03_download_spectrograms.py
 python scripts/04_class_distribution.py
 python scripts/06_temporal_split.py
-python scripts/07_verify_split.py     # Must pass all 5 checks
+python scripts/07_verify_split.py     # Must pass all 7 checks
 
 # Phase 2: CNN baseline
 python scripts/09_train_cnn_baseline.py
@@ -138,6 +138,12 @@ python scripts/16_threshold_test.py
 python scripts/17_random_split_ablation.py
 python scripts/18_power_analysis.py
 ```
+
+The split verifier checks that each assigned ID occurs once and exists in the
+filtered source, that source IDs are unique, and that the number of source-only
+IDs matches the recorded gap-exclusion count. It writes aggregate evidence to
+`data/metadata/split_statistics.json` and exits nonzero if any check fails.
+This check does not establish that every omitted event was inside a temporal gap.
 
 ### Pre-trained Models
 

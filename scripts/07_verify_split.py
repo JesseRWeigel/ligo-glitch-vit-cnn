@@ -2,13 +2,14 @@
 """
 Programmatic verification of temporal train/val/test split.
 
-Runs 5 mandatory checks:
+Runs 7 mandatory checks:
 1. Temporal gap: all test samples >= 60s from nearest train sample
 2. Temporal gap: all val samples >= 60s from nearest train sample
 3. No ID overlap across splits
 4. No GPS time range overlap (with 60s gap)
 5. Class coverage: all 23 classes have >= 1 test sample
 6. Split ratio within acceptable bounds
+7. Source ID membership and omitted-ID accounting
 
 Uses binary search (O(N log N)) for gap verification.
 
@@ -186,15 +187,49 @@ def check_split_ratios(n_train, n_val, n_test) -> dict:
     }
 
 
+
+def check_source_membership(source_ids, assigned_ids, expected_excluded) -> dict:
+    """Reconcile actual IDs, not just row counts, against filtered metadata."""
+    source_nonnull = source_ids.dropna()
+    assigned_nonnull = assigned_ids.dropna()
+    source = set(source_nonnull)
+    assigned = set(assigned_nonnull)
+    omitted = len(source - assigned)
+
+    details = {
+        "missing_source_id_rows": int(source_ids.isna().sum()),
+        "missing_assignment_id_rows": int(assigned_ids.isna().sum()),
+        "duplicate_source_rows": len(source_nonnull) - len(source),
+        "duplicate_assignment_rows": len(assigned_nonnull) - len(assigned),
+        "assigned_ids_absent_from_source": len(assigned - source),
+        "gap_count_mismatch": type(expected_excluded) is not int or omitted != expected_excluded,
+    }
+    status = "FAIL" if any(details.values()) else "PASS"
+    print(f"  [{status}] Source membership: source-only IDs={omitted}, "
+          f"expected gap exclusions={expected_excluded!r}")
+    for name, value in details.items():
+        if value:
+            print(f"    {name}: {value}")
+    return {"status": status, "source_only_ids": omitted, **details}
+
+
 def main():
     print("=" * 70)
     print("SPLIT VERIFICATION: Temporal Gap & Coverage Checks")
     print("=" * 70)
 
     # Load manifests
-    train_df = pd.read_csv(MANIFEST_DIR / "train_manifest.csv")
-    val_df = pd.read_csv(MANIFEST_DIR / "val_manifest.csv")
-    test_df = pd.read_csv(MANIFEST_DIR / "test_manifest.csv")
+    id_dtype = {"gravityspy_id": "string"}
+    train_df = pd.read_csv(MANIFEST_DIR / "train_manifest.csv", dtype=id_dtype)
+    val_df = pd.read_csv(MANIFEST_DIR / "val_manifest.csv", dtype=id_dtype)
+    test_df = pd.read_csv(MANIFEST_DIR / "test_manifest.csv", dtype=id_dtype)
+    source_ids = pd.read_csv(
+        MANIFEST_DIR / "gravity_spy_o3_filtered.csv",
+        usecols=["gravityspy_id"],
+        dtype=id_dtype,
+    )["gravityspy_id"]
+    with STATS_PATH.open() as f:
+        stats = json.load(f)
 
     print(f"\nLoaded: train={len(train_df):,}, val={len(val_df):,}, test={len(test_df):,}")
 
@@ -227,6 +262,13 @@ def main():
     # Check 6: Split ratios
     ratio_check = check_split_ratios(len(train_df), len(val_df), len(test_df))
 
+    # Check 7: Reconcile manifest IDs against the filtered source
+    membership_check = check_source_membership(
+        source_ids,
+        pd.concat([split["gravityspy_id"] for split in (train_df, val_df, test_df)]),
+        stats.get("samples_excluded_in_gaps"),
+    )
+
     # ------------------------------------------------------------------
     # Aggregate results
     # ------------------------------------------------------------------
@@ -237,6 +279,7 @@ def main():
         "no_time_range_overlap": time_overlap["status"],
         "class_coverage": class_cov["status"],
         "split_ratio": ratio_check["status"],
+        "source_membership": membership_check["status"],
     }
 
     all_pass = all(v == "PASS" for v in verification_results.values())
@@ -250,9 +293,6 @@ def main():
     # ------------------------------------------------------------------
     # Update split_statistics.json with verification results
     # ------------------------------------------------------------------
-    with open(STATS_PATH) as f:
-        stats = json.load(f)
-
     stats["verification_results"] = verification_results
     stats["verification_details"] = {
         "temporal_gap_test_vs_train": gap_test_train,
@@ -261,22 +301,12 @@ def main():
         "no_time_range_overlap": time_overlap,
         "class_coverage": class_cov,
         "split_ratio": ratio_check,
+        "source_membership": membership_check,
     }
 
     with open(STATS_PATH, "w") as f:
         json.dump(stats, f, indent=2)
     print(f"\nUpdated {STATS_PATH} with verification results")
-
-    # Also verify total count consistency
-    original_csv = pd.read_csv("data/metadata/gravity_spy_o3_filtered.csv")
-    n_original = len(original_csv)
-    n_assigned = len(train_df) + len(val_df) + len(test_df)
-    n_gap = n_original - n_assigned
-    print(f"\nSample accounting: {n_original:,} total = {n_assigned:,} assigned + {n_gap:,} gap-excluded")
-
-    if n_gap != stats.get("samples_excluded_in_gaps", -1):
-        print(f"  WARNING: gap count mismatch with split_statistics.json "
-              f"({n_gap} vs {stats.get('samples_excluded_in_gaps')})")
 
     return 0 if all_pass else 1
 
