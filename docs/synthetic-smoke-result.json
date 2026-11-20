@@ -1,0 +1,52 @@
+{
+  "bootstrap_run": false,
+  "boundaries": {
+    "test_start_gps": 1600.0,
+    "train_end_gps": 1300.0,
+    "val_end_gps": 1500.0,
+    "val_start_gps": 1400.0
+  },
+  "inputs_sha256": "6075b837a9530eb63afbeccd236601df8494019cd363a796be5393c8c71f4eee",
+  "macro_f1": {
+    "stub_a": 0.333333333,
+    "stub_b": 1.0
+  },
+  "memberships": {
+    "gap_excluded": [
+      "toy-14",
+      "toy-17"
+    ],
+    "test": [
+      "toy-18",
+      "toy-19"
+    ],
+    "train": [
+      "toy-00",
+      "toy-01",
+      "toy-02",
+      "toy-03",
+      "toy-04",
+      "toy-05",
+      "toy-06",
+      "toy-07",
+      "toy-08",
+      "toy-09",
+      "toy-10",
+      "toy-11",
+      "toy-12",
+      "toy-13"
+    ],
+    "val": [
+      "toy-15",
+      "toy-16"
+    ]
+  },
+  "minimum_gap_seconds": 60,
+  "prediction_order": [
+    "toy-18",
+    "toy-19"
+  ],
+  "schema_version": 1,
+  "scope": "synthetic CPU smoke only; not a scientific result",
+  "training_seeds_run": false
+}
