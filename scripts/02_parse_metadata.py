@@ -10,7 +10,7 @@ Conventions:
 
 import json
 import os
-import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -42,12 +42,17 @@ REQUIRED_COLUMNS = ["gravityspy_id", "event_time", "ifo", "ml_label", "ml_confid
 def load_o3_data():
     """Load and concatenate O3a and O3b CSV files for both detectors."""
     o3_files = ["H1_O3a.csv", "H1_O3b.csv", "L1_O3a.csv", "L1_O3b.csv"]
+    paths = [RAW_DIR / name for name in o3_files]
+    missing = [path.name for path in paths if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(
+            f"Missing required O3 metadata files in {RAW_DIR}: {', '.join(missing)}. "
+            "Run scripts/01_download_metadata.py first."
+        )
+
     frames = []
-    for fname in o3_files:
-        fpath = RAW_DIR / fname
-        if not fpath.exists():
-            print(f"WARNING: {fpath} not found, skipping")
-            continue
+    for fpath in paths:
+        fname = fpath.name
         df = pd.read_csv(fpath)
         print(f"Loaded {fname}: {len(df)} rows, {df.ml_label.nunique()} unique labels")
         frames.append(df)
@@ -104,7 +109,9 @@ def validate_and_filter(df):
     pre_conf = len(df)
     df = df[df["ml_confidence"] > 0.9].copy()
     step_counts["after_confidence_filter"] = len(df)
-    print(f"After ml_confidence > 0.9: {len(df)} rows (removed {pre_conf - len(df)}, {100*(pre_conf-len(df))/pre_conf:.1f}%)")
+    removed = pre_conf - len(df)
+    removed_pct = 100 * removed / pre_conf if pre_conf else 0
+    print(f"After ml_confidence > 0.9: {len(df)} rows (removed {removed}, {removed_pct:.1f}%)")
 
     # Step 6: Check for NaN in critical columns
     for col in REQUIRED_COLUMNS:
@@ -188,9 +195,48 @@ def print_summary(df, step_counts):
         print(f"All 23 expected classes present")
 
 
+def validate_output(df):
+    """Reject invalid output even when Python assertions are disabled."""
+    if df.empty:
+        raise ValueError("Filtered dataset is empty")
+    if df["ml_confidence"].min() <= 0.9:
+        raise ValueError("Confidence filter not applied correctly")
+    if set(df["ifo"].unique()) != {"H1", "L1"}:
+        raise ValueError("Missing detector")
+    if "None_of_the_Above" in df["ml_label"].values:
+        raise ValueError("NOTA not excluded")
+    if df["ml_label"].nunique() != 23:
+        raise ValueError(f"Expected 23 classes, got {df['ml_label'].nunique()}")
+    if not 5000 < len(df) < 500000:
+        raise ValueError(f"Total {len(df)} outside plausible range")
+    for col in REQUIRED_COLUMNS:
+        if df[col].isna().any():
+            raise ValueError(f"NaN found in {col}")
+    if df["event_time"].min() < O3A_START or df["event_time"].max() > O3B_END:
+        raise ValueError("GPS times outside O3")
+    if df.duplicated(subset=["ifo", "event_time"]).any():
+        raise ValueError("Duplicate times per detector")
+
+
+def save_filtered_metadata(df, destination):
+    """Replace the last dataset only after the new CSV has been written."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", newline="", dir=destination.parent,
+            prefix=f".{destination.name}.", suffix=".tmp", delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            df.to_csv(handle, index=False)
+        temporary.replace(destination)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
 def main():
     os.chdir(Path(__file__).resolve().parent.parent)
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     # Load O3 data
     df = load_o3_data()
@@ -210,37 +256,13 @@ def main():
 
     df_out = df_filtered[output_cols].copy()
 
-    # Save
-    df_out.to_csv(OUTPUT_PATH, index=False)
+    validate_output(df_out)
+    print("\nAll validation checks PASSED")
+
+    save_filtered_metadata(df_out, OUTPUT_PATH)
     print(f"\nSaved filtered dataset to {OUTPUT_PATH}")
     print(f"File size: {OUTPUT_PATH.stat().st_size / (1024*1024):.1f} MB")
-
-    # Print summary
     print_summary(df_out, step_counts)
-
-    # Final validation assertions
-    assert len(df_out) > 0, "Filtered dataset is empty!"
-    assert df_out["ml_confidence"].min() >= 0.9, "Confidence filter not applied correctly"
-    assert set(df_out["ifo"].unique()) == {"H1", "L1"}, "Missing detector"
-    assert "None_of_the_Above" not in df_out["ml_label"].values, "NOTA not excluded"
-    assert df_out["ml_label"].nunique() == 23, f"Expected 23 classes, got {df_out['ml_label'].nunique()}"
-    # Plan estimated ~8-10K but actual O3 data at conf>0.9 has ~325K (see DEVIATION note)
-    assert 5000 < len(df_out) < 500000, f"Total {len(df_out)} outside plausible range"
-
-    # Check no NaN in critical columns
-    for col in REQUIRED_COLUMNS:
-        assert df_out[col].isna().sum() == 0, f"NaN found in {col}"
-
-    # Check GPS times are in O3 range
-    assert df_out["event_time"].min() >= O3A_START, "GPS time before O3a start"
-    assert df_out["event_time"].max() <= O3B_END, "GPS time after O3b end"
-
-    # Check no exact duplicates per detector
-    for ifo in ["H1", "L1"]:
-        ifo_times = df_out.loc[df_out["ifo"] == ifo, "event_time"]
-        assert ifo_times.duplicated().sum() == 0, f"Duplicate times in {ifo}"
-
-    print("\nAll validation assertions PASSED")
 
 
 if __name__ == "__main__":
