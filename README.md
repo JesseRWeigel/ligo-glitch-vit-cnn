@@ -116,7 +116,7 @@ training seeds nor the scientific findings are verified by this smoke run.
 ```bash
 # Phase 1: Data acquisition and preparation
 python scripts/01_download_metadata.py
-python scripts/02_parse_metadata.py
+python scripts/02_parse_metadata.py  # Requires both O3 partitions for both detectors
 python scripts/03_download_spectrograms.py
 python scripts/04_class_distribution.py
 python scripts/06_temporal_split.py
