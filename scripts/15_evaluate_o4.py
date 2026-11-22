@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.data.transforms import eval_transforms
 from src.evaluation.bootstrap_ci import bootstrap_per_class_f1, bootstrap_macro_f1
 from src.evaluation.evaluate import run_inference, compute_metrics
+from src.evaluation.prediction_export import save_o4_predictions
 from src.models.resnet_baseline import build_resnet50_baseline
 from src.models.vit_classifier import build_vit_classifier
 
@@ -190,7 +191,10 @@ def run_o4_inference(cnn_model, vit_model, device):
     log.info("STEP 2: O4 inference")
     log.info("=" * 60)
 
-    o4_manifest = pd.read_csv(O4_MANIFEST)
+    # Keep lexical IDs intact, even when an entire manifest has numeric-looking values.
+    o4_manifest = pd.read_csv(O4_MANIFEST, dtype={"gravityspy_id": str})
+    if "gravityspy_id" not in o4_manifest:
+        raise ValueError("O4 manifest is missing gravityspy_id")
     transform = eval_transforms(224)
 
     dataset = SpectrogramDataset(o4_manifest, "image_path", "label", transform)
@@ -203,12 +207,16 @@ def run_o4_inference(cnn_model, vit_model, device):
     cnn_preds, labels = run_inference(cnn_model, loader, device)
 
     log.info("Running ViT on O4...")
-    vit_preds, _ = run_inference(vit_model, loader, device)
+    vit_preds, vit_labels = run_inference(vit_model, loader, device)
 
-    np.savez(
+    # Both passes traverse the same sequential loader. Use the dataset's actual
+    # row order, and check both runs against its complete expected label vector.
+    save_o4_predictions(
         RESULTS_DIR / "o4_predictions.npz",
-        y_true=labels, cnn_preds=cnn_preds, vit_preds=vit_preds,
-        class_names=O3_CLASSES,
+        gravityspy_ids=dataset.df["gravityspy_id"].tolist(),
+        expected_labels=[CLASS_TO_IDX[label] for label in dataset.df[dataset.label_col]],
+        cnn_labels=labels, vit_labels=vit_labels,
+        cnn_preds=cnn_preds, vit_preds=vit_preds, class_names=O3_CLASSES,
     )
     log.info("Saved o4_predictions.npz")
 

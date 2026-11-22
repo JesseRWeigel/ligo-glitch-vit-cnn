@@ -111,6 +111,13 @@ one is advertised and that failed downloads do not replace the destination.
 This is a wiring check with stipulated predictions. Neither checkpoints, bootstraps,
 training seeds nor the scientific findings are verified by this smoke run.
 
+New runs of `scripts/15_evaluate_o4.py` write `gravityspy_ids` alongside the
+existing labels and predictions in `o4_predictions.npz`. These are the literal
+IDs from the O4 evaluation manifest in prediction-row order; both model label
+vectors are checked against the manifest before export. They are not necessarily
+Zooniverse subject IDs. Do not infer IDs by array position for the historical
+checked-in archives, which lack this field.
+
 ### Full Pipeline
 
 ```bash
