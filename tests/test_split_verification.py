@@ -34,7 +34,11 @@ class SplitVerificationTests(unittest.TestCase):
                 train[1][0] = ""
             elif defect == "source_duplicate":
                 original[101][0] = original[100][0]
-            write_csv("gravity_spy_o3_filtered.csv", original)
+            elif defect == "swapped_labels":
+                train[0][2], train[1][2] = train[1][2], train[0][2]
+            elif defect == "missing_label":
+                train[0][2] = ""
+            write_csv("gravity_spy_o3_filtered.csv", list(reversed(original)))
             write_csv("train_manifest.csv", train)
             write_csv("val_manifest.csv", original[62:77])
             write_csv("test_manifest.csv", original[77:100])
@@ -50,7 +54,16 @@ class SplitVerificationTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         detail = stats["verification_details"]["source_membership"]
         self.assertEqual(detail["source_only_ids"], 2)
+        self.assertEqual(detail["assigned_label_mismatch_rows"], 0)
         self.assertEqual(detail["status"], "PASS")
+
+    def test_swapped_labels_fail_even_with_unchanged_ids_and_class_counts(self):
+        result, stats = self.run_verifier("swapped_labels")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        detail = stats["verification_details"]["source_membership"]
+        self.assertEqual(detail["assigned_label_mismatch_rows"], 2)
+        self.assertFalse(detail["assigned_ids_absent_from_source"])
+        self.assertEqual(stats["verification_results"]["class_coverage"], "PASS")
 
     def test_membership_errors_fail_even_if_all_other_checks_pass(self):
         for defect, metric in [
@@ -59,6 +72,7 @@ class SplitVerificationTests(unittest.TestCase):
             ("missing", "missing_assignment_id_rows"),
             ("source_duplicate", "duplicate_source_rows"),
             ("bad_count", "gap_count_mismatch"),
+            ("missing_label", "assigned_label_mismatch_rows"),
         ]:
             with self.subTest(defect=defect):
                 result, stats = self.run_verifier(defect)

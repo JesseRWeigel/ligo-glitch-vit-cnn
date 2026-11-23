@@ -9,7 +9,7 @@ Runs 7 mandatory checks:
 4. No GPS time range overlap (with 60s gap)
 5. Class coverage: all 23 classes have >= 1 test sample
 6. Split ratio within acceptable bounds
-7. Source ID membership and omitted-ID accounting
+7. Source ID and label reconciliation, plus omitted-ID accounting
 
 Uses binary search (O(N log N)) for gap verification.
 
@@ -126,9 +126,9 @@ def check_no_time_range_overlap(train_times, val_times, test_times) -> dict:
 
 def check_class_coverage(train_df, val_df, test_df) -> dict:
     """Check that all 23 classes have >= 1 sample in each split."""
-    train_classes = set(train_df["ml_label"].unique())
-    val_classes = set(val_df["ml_label"].unique())
-    test_classes = set(test_df["ml_label"].unique())
+    train_classes = set(train_df["ml_label"].dropna().unique())
+    val_classes = set(val_df["ml_label"].dropna().unique())
+    test_classes = set(test_df["ml_label"].dropna().unique())
     all_classes = train_classes | val_classes | test_classes
 
     missing_test = sorted(all_classes - test_classes)
@@ -188,13 +188,24 @@ def check_split_ratios(n_train, n_val, n_test) -> dict:
 
 
 
-def check_source_membership(source_ids, assigned_ids, expected_excluded) -> dict:
-    """Reconcile actual IDs, not just row counts, against filtered metadata."""
+def check_source_membership(source_rows, assigned_rows, expected_excluded) -> dict:
+    """Reconcile IDs and per-event labels against filtered metadata."""
+    source_ids = source_rows["gravityspy_id"]
+    assigned_ids = assigned_rows["gravityspy_id"]
     source_nonnull = source_ids.dropna()
     assigned_nonnull = assigned_ids.dropna()
     source = set(source_nonnull)
     assigned = set(assigned_nonnull)
     omitted = len(source - assigned)
+
+    # Invalid ID rows already fail below. Compare labels only where the source
+    # ID is known and has an unambiguous source record.
+    unique_source = source_rows.dropna(subset=["gravityspy_id"]).drop_duplicates(
+        subset=["gravityspy_id"], keep=False
+    ).set_index("gravityspy_id")["ml_label"]
+    matched_rows = assigned_rows.loc[assigned_ids.isin(unique_source.index)]
+    expected_labels = matched_rows["gravityspy_id"].map(unique_source)
+    labels_match = matched_rows["ml_label"].eq(expected_labels).fillna(False)
 
     details = {
         "missing_source_id_rows": int(source_ids.isna().sum()),
@@ -202,6 +213,7 @@ def check_source_membership(source_ids, assigned_ids, expected_excluded) -> dict
         "duplicate_source_rows": len(source_nonnull) - len(source),
         "duplicate_assignment_rows": len(assigned_nonnull) - len(assigned),
         "assigned_ids_absent_from_source": len(assigned - source),
+        "assigned_label_mismatch_rows": int((~labels_match).sum()),
         "gap_count_mismatch": type(expected_excluded) is not int or omitted != expected_excluded,
     }
     status = "FAIL" if any(details.values()) else "PASS"
@@ -219,15 +231,16 @@ def main():
     print("=" * 70)
 
     # Load manifests
-    id_dtype = {"gravityspy_id": "string"}
-    train_df = pd.read_csv(MANIFEST_DIR / "train_manifest.csv", dtype=id_dtype)
-    val_df = pd.read_csv(MANIFEST_DIR / "val_manifest.csv", dtype=id_dtype)
-    test_df = pd.read_csv(MANIFEST_DIR / "test_manifest.csv", dtype=id_dtype)
-    source_ids = pd.read_csv(
+    source_columns = ["gravityspy_id", "ml_label"]
+    text_dtype = dict.fromkeys(source_columns, "string")
+    train_df = pd.read_csv(MANIFEST_DIR / "train_manifest.csv", dtype=text_dtype)
+    val_df = pd.read_csv(MANIFEST_DIR / "val_manifest.csv", dtype=text_dtype)
+    test_df = pd.read_csv(MANIFEST_DIR / "test_manifest.csv", dtype=text_dtype)
+    source_rows = pd.read_csv(
         MANIFEST_DIR / "gravity_spy_o3_filtered.csv",
-        usecols=["gravityspy_id"],
-        dtype=id_dtype,
-    )["gravityspy_id"]
+        usecols=source_columns,
+        dtype=text_dtype,
+    )
     with STATS_PATH.open() as f:
         stats = json.load(f)
 
@@ -262,10 +275,10 @@ def main():
     # Check 6: Split ratios
     ratio_check = check_split_ratios(len(train_df), len(val_df), len(test_df))
 
-    # Check 7: Reconcile manifest IDs against the filtered source
+    # Check 7: Reconcile manifest IDs and labels against the filtered source
     membership_check = check_source_membership(
-        source_ids,
-        pd.concat([split["gravityspy_id"] for split in (train_df, val_df, test_df)]),
+        source_rows,
+        pd.concat([split[source_columns] for split in (train_df, val_df, test_df)], ignore_index=True),
         stats.get("samples_excluded_in_gaps"),
     )
 
