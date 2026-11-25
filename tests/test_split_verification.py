@@ -15,7 +15,7 @@ class SplitVerificationTests(unittest.TestCase):
             metadata = Path(directory) / "data" / "metadata"
             metadata.mkdir(parents=True)
             original = [
-                [f"toy-{i}", i * 100, f"class-{i % 23}"]
+                [f"toy-{i}", 1_280_000_000 + i * 100, f"class-{i % 23}"]
                 for i in range(102)
             ]
 
@@ -38,6 +38,12 @@ class SplitVerificationTests(unittest.TestCase):
                 train[0][2], train[1][2] = train[1][2], train[0][2]
             elif defect == "missing_label":
                 train[0][2] = ""
+            elif defect == "swapped_source_times":
+                train[0][1], train[1][1] = train[1][1], train[0][1]
+            elif defect == "shifted_source_time":
+                train[1][1] += 0.01
+            elif defect == "small_serialization_difference":
+                train[1][1] += 0.0000002
             write_csv("gravity_spy_o3_filtered.csv", list(reversed(original)))
             write_csv("train_manifest.csv", train)
             write_csv("val_manifest.csv", original[62:77])
@@ -64,6 +70,22 @@ class SplitVerificationTests(unittest.TestCase):
         self.assertEqual(detail["assigned_label_mismatch_rows"], 2)
         self.assertFalse(detail["assigned_ids_absent_from_source"])
         self.assertEqual(stats["verification_results"]["class_coverage"], "PASS")
+
+    def test_swapped_event_times_fail_despite_unchanged_split_gaps(self):
+        result, stats = self.run_verifier("swapped_source_times")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertEqual(stats["verification_results"]["no_time_range_overlap"], "PASS")
+        self.assertEqual(stats["verification_details"]["source_membership"]["assigned_time_mismatch_rows"], 2)
+
+    def test_absolute_tolerance_does_not_grow_with_gps_time(self):
+        result, stats = self.run_verifier("shifted_source_time")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertEqual(stats["verification_details"]["source_membership"]["assigned_time_mismatch_rows"], 1)
+
+    def test_sub_microsecond_serialization_difference_passes(self):
+        result, stats = self.run_verifier("small_serialization_difference")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(stats["verification_details"]["source_membership"]["assigned_time_mismatch_rows"], 0)
 
     def test_membership_errors_fail_even_if_all_other_checks_pass(self):
         for defect, metric in [
