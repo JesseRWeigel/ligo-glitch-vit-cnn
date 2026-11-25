@@ -9,7 +9,7 @@ Runs 7 mandatory checks:
 4. No GPS time range overlap (with 60s gap)
 5. Class coverage: all 23 classes have >= 1 test sample
 6. Split ratio within acceptable bounds
-7. Source ID and label reconciliation, plus omitted-ID accounting
+7. Source ID, label and GPS time reconciliation, plus omitted-ID accounting
 
 Uses binary search (O(N log N)) for gap verification.
 
@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 
 GAP_SECONDS = 60
+GPS_ROUNDTRIP_TOLERANCE_SECONDS = 1e-6
 EXPECTED_CLASSES = 23
 
 TRAIN_RANGE = (0.60, 0.80)
@@ -189,7 +190,7 @@ def check_split_ratios(n_train, n_val, n_test) -> dict:
 
 
 def check_source_membership(source_rows, assigned_rows, expected_excluded) -> dict:
-    """Reconcile IDs and per-event labels against filtered metadata."""
+    """Reconcile IDs, labels and GPS times against filtered metadata."""
     source_ids = source_rows["gravityspy_id"]
     assigned_ids = assigned_rows["gravityspy_id"]
     source_nonnull = source_ids.dropna()
@@ -198,14 +199,22 @@ def check_source_membership(source_rows, assigned_rows, expected_excluded) -> di
     assigned = set(assigned_nonnull)
     omitted = len(source - assigned)
 
-    # Invalid ID rows already fail below. Compare labels only where the source
+    # Invalid ID rows already fail below. Compare event fields only where the source
     # ID is known and has an unambiguous source record.
     unique_source = source_rows.dropna(subset=["gravityspy_id"]).drop_duplicates(
         subset=["gravityspy_id"], keep=False
-    ).set_index("gravityspy_id")["ml_label"]
+    ).set_index("gravityspy_id")
     matched_rows = assigned_rows.loc[assigned_ids.isin(unique_source.index)]
-    expected_labels = matched_rows["gravityspy_id"].map(unique_source)
+    expected_labels = matched_rows["gravityspy_id"].map(unique_source["ml_label"])
     labels_match = matched_rows["ml_label"].eq(expected_labels).fillna(False)
+
+    expected_times = matched_rows["gravityspy_id"].map(unique_source["event_time"])
+    observed_gps = matched_rows["event_time"].to_numpy(dtype=float)
+    expected_gps = expected_times.to_numpy(dtype=float)
+    # Allow only floating-point CSV round-trip noise at GPS-scale values.
+    times_match = np.isfinite(observed_gps) & np.isfinite(expected_gps) & np.isclose(
+        observed_gps, expected_gps, rtol=0, atol=GPS_ROUNDTRIP_TOLERANCE_SECONDS
+    )
 
     details = {
         "missing_source_id_rows": int(source_ids.isna().sum()),
@@ -214,6 +223,7 @@ def check_source_membership(source_rows, assigned_rows, expected_excluded) -> di
         "duplicate_assignment_rows": len(assigned_nonnull) - len(assigned),
         "assigned_ids_absent_from_source": len(assigned - source),
         "assigned_label_mismatch_rows": int((~labels_match).sum()),
+        "assigned_time_mismatch_rows": int((~times_match).sum()),
         "gap_count_mismatch": type(expected_excluded) is not int or omitted != expected_excluded,
     }
     status = "FAIL" if any(details.values()) else "PASS"
@@ -231,8 +241,8 @@ def main():
     print("=" * 70)
 
     # Load manifests
-    source_columns = ["gravityspy_id", "ml_label"]
-    text_dtype = dict.fromkeys(source_columns, "string")
+    source_columns = ["gravityspy_id", "ml_label", "event_time"]
+    text_dtype = dict.fromkeys(["gravityspy_id", "ml_label"], "string")
     train_df = pd.read_csv(MANIFEST_DIR / "train_manifest.csv", dtype=text_dtype)
     val_df = pd.read_csv(MANIFEST_DIR / "val_manifest.csv", dtype=text_dtype)
     test_df = pd.read_csv(MANIFEST_DIR / "test_manifest.csv", dtype=text_dtype)
@@ -275,7 +285,7 @@ def main():
     # Check 6: Split ratios
     ratio_check = check_split_ratios(len(train_df), len(val_df), len(test_df))
 
-    # Check 7: Reconcile manifest IDs and labels against the filtered source
+    # Check 7: Reconcile manifest IDs, labels and GPS times against the filtered source
     membership_check = check_source_membership(
         source_rows,
         pd.concat([split[source_columns] for split in (train_df, val_df, test_df)], ignore_index=True),
