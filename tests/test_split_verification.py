@@ -44,6 +44,10 @@ class SplitVerificationTests(unittest.TestCase):
                 train[1][1] += 0.01
             elif defect == "small_serialization_difference":
                 train[1][1] += 0.0000002
+            original[100][1] = original[61][1] + 30
+            original[101][1] = original[76][1] + 30
+            if defect == "wrong_exclusion_same_count":
+                original[100][1] = original[10][1] + 30
             write_csv("gravity_spy_o3_filtered.csv", list(reversed(original)))
             write_csv("train_manifest.csv", train)
             write_csv("val_manifest.csv", original[62:77])
@@ -105,3 +109,11 @@ class SplitVerificationTests(unittest.TestCase):
                     all(status == "PASS" for key, status in statuses.items() if key != "source_membership")
                 )
                 self.assertTrue(stats["verification_details"]["source_membership"][metric])
+
+    def test_omitted_event_inside_training_fails_even_with_matching_counts(self):
+        result, stats = self.run_verifier("wrong_exclusion_same_count")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        detail = stats["verification_details"]["source_membership"]
+        self.assertEqual(detail["source_only_ids"], 2)
+        self.assertFalse(detail["gap_count_mismatch"])
+        self.assertEqual(detail["source_only_rows_outside_gaps"], 1)
