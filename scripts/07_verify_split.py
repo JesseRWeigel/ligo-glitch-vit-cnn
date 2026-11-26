@@ -9,7 +9,7 @@ Runs 7 mandatory checks:
 4. No GPS time range overlap (with 60s gap)
 5. Class coverage: all 23 classes have >= 1 test sample
 6. Split ratio within acceptable bounds
-7. Source ID, label and GPS time reconciliation, plus omitted-ID accounting
+7. Source ID, label and GPS time reconciliation, plus omitted-event location
 
 Uses binary search (O(N log N)) for gap verification.
 
@@ -189,7 +189,7 @@ def check_split_ratios(n_train, n_val, n_test) -> dict:
 
 
 
-def check_source_membership(source_rows, assigned_rows, expected_excluded) -> dict:
+def check_source_membership(source_rows, assigned_rows, expected_excluded, gap_windows) -> dict:
     """Reconcile IDs, labels and GPS times against filtered metadata."""
     source_ids = source_rows["gravityspy_id"]
     assigned_ids = assigned_rows["gravityspy_id"]
@@ -197,7 +197,19 @@ def check_source_membership(source_rows, assigned_rows, expected_excluded) -> di
     assigned_nonnull = assigned_ids.dropna()
     source = set(source_nonnull)
     assigned = set(assigned_nonnull)
-    omitted = len(source - assigned)
+    omitted_ids = source - assigned
+    omitted = len(omitted_ids)
+
+    # Equal counts alone can hide the loss of an event belonging to a split.
+    # Only the open intervals between adjacent observed split ranges qualify.
+    omitted_times = source_rows.loc[
+        source_ids.isin(omitted_ids), "event_time"
+    ].to_numpy(dtype=float)
+    in_gap = np.zeros(len(omitted_times), dtype=bool)
+    for left, right in gap_windows:
+        if np.isfinite(left) and np.isfinite(right) and right - left >= GAP_SECONDS:
+            in_gap |= (left < omitted_times) & (omitted_times < right)
+    in_gap &= np.isfinite(omitted_times)
 
     # Invalid ID rows already fail below. Compare event fields only where the source
     # ID is known and has an unambiguous source record.
@@ -224,6 +236,7 @@ def check_source_membership(source_rows, assigned_rows, expected_excluded) -> di
         "assigned_ids_absent_from_source": len(assigned - source),
         "assigned_label_mismatch_rows": int((~labels_match).sum()),
         "assigned_time_mismatch_rows": int((~times_match).sum()),
+        "source_only_rows_outside_gaps": int((~in_gap).sum()),
         "gap_count_mismatch": type(expected_excluded) is not int or omitted != expected_excluded,
     }
     status = "FAIL" if any(details.values()) else "PASS"
@@ -290,6 +303,7 @@ def main():
         source_rows,
         pd.concat([split[source_columns] for split in (train_df, val_df, test_df)], ignore_index=True),
         stats.get("samples_excluded_in_gaps"),
+        ((train_times.max(), val_times.min()), (val_times.max(), test_times.min())),
     )
 
     # ------------------------------------------------------------------
