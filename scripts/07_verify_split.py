@@ -201,14 +201,20 @@ def check_source_membership(source_rows, assigned_rows, expected_excluded, gap_w
     omitted = len(omitted_ids)
 
     # Equal counts alone can hide the loss of an event belonging to a split.
-    # Only the open intervals between adjacent observed split ranges qualify.
+    # The builder starts the next split at its first event beyond the
+    # 60-second buffer. A long interval with no assigned event does not allow
+    # unrelated omissions outside that buffer.
     omitted_times = source_rows.loc[
         source_ids.isin(omitted_ids), "event_time"
     ].to_numpy(dtype=float)
     in_gap = np.zeros(len(omitted_times), dtype=bool)
     for left, right in gap_windows:
         if np.isfinite(left) and np.isfinite(right) and right - left >= GAP_SECONDS:
-            in_gap |= (left < omitted_times) & (omitted_times < right)
+            in_gap |= (
+                (left < omitted_times)
+                & (omitted_times < right)
+                & (omitted_times - left <= GAP_SECONDS + GPS_ROUNDTRIP_TOLERANCE_SECONDS)
+            )
     in_gap &= np.isfinite(omitted_times)
 
     # Invalid ID rows already fail below. Compare event fields only where the source
